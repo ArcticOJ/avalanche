@@ -32,9 +32,6 @@ export default function Problem() {
               <TabItem icon={Clock}>
                 Recent submissions
               </TabItem>
-              <TabItem>
-                {problem}
-              </TabItem>
             </TabItems>
             <TabPanels>
               <TabPanel>
