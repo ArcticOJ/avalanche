@@ -67,7 +67,7 @@ export class Compiler {
     }
 
     hostWrite(data) {
-        console.log(data, this, this.dispatch);
+        console.log(data);
         this.dispatch('output', data);
     }
 

@@ -1,9 +1,7 @@
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback, useRef, useState} from 'react';
 import {WorkerMessage} from 'lib/types/common';
 import {useIsomorphicLayoutEffect} from 'framer-motion';
-import {notify} from 'lib/notifications';
-import {Button, ButtonGroup, Text, useBoolean, VStack} from '@chakra-ui/react';
-import {Check, HelpCircle} from 'react-feather';
+import {useBoolean} from '@chakra-ui/react';
 import throttle from 'lodash.throttle';
 
 interface CompilerParameters {

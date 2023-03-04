@@ -3,7 +3,7 @@ import Layout from 'components/Layout';
 import 'styles/arctic.css';
 import Head from 'next/head';
 import {ChakraProvider, ToastProvider} from '@chakra-ui/react';
-import {Component, useEffect, useMemo} from 'react';
+import {Component, useMemo} from 'react';
 import '@fontsource/montserrat/500.css';
 import '@fontsource/montserrat/600.css';
 import '@fontsource/montserrat/700.css';

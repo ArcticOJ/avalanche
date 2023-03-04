@@ -11,18 +11,17 @@ import {
   Tooltip,
   VStack
 } from '@chakra-ui/react';
-import {Award, BookOpen, Briefcase, Clock, DivideSquare, Edit, Info, Users, Watch} from 'react-feather';
+import {Activity, Award, BookOpen, Briefcase, Clock, DivideSquare, Edit, Info, Users, Watch} from 'react-feather';
 import NextLink from 'next/link';
-import TabIcon from 'components/TabIcon';
 import Gravatar from 'components/Gravatar';
 import Markdown from 'components/Markdown';
 import Section from 'components/Section';
-import {createElement, useEffect} from 'react';
-import {useAuth} from 'lib/hooks/useAuth';
+import {createElement} from 'react';
 import {format} from 'fecha';
 import useRequiredAuth from 'lib/hooks/useRequiredAuth';
-import {TabItem, TabItems} from 'components/TabItem';
-import useSWR from 'swr';
+import {TabItem} from 'components/TabItem';
+import HeatMap from '@uiw/react-heat-map';
+import '@uiw/react-heat-map/dist/heat-map.min.css';
 
 function TextItem({label, icon, children}) {
   return (
@@ -94,6 +93,13 @@ export default function ProfilePage() {
               </Section>
               <Section title='Prizes & awards' icon={Award} px={4} py={2}>
                 This user has not obtained any prizes or awards.
+              </Section>
+              <Section title='Activity' icon={Activity} px={4} pb={4}>
+                <HeatMap rectSize={14} rectRender={(props, data) => (
+                  <Tooltip label={data.count} placement='top'>
+                    <rect {...props} rx={4} />
+                  </Tooltip>
+                )} />
               </Section>
             </TabPanel>
           </TabPanels>

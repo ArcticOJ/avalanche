@@ -42,7 +42,6 @@
   },
   "include": [
     "next-env.d.ts",
-    "clang.d.ts",
     "**/*.ts",
     "**/*.tsx"
   ],

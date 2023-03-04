@@ -1,15 +1,16 @@
 import {
-  Box,
-  Button,
-  chakra, Container,
+  chakra,
   Flex,
-  forwardRef, HStack, Text,
-  useBoolean,
-  useMultiStyleConfig,
-  useTab, useTabIndicator, useTabList, useTabs, useTabsStyles, useToken,
+  forwardRef,
+  HStack,
+  Text,
+  useTab,
+  useTabList,
+  useTabsStyles,
+  useToken,
   VStack
 } from '@chakra-ui/react';
-import React, {createElement, useMemo} from 'react';
+import React, {createElement} from 'react';
 import {motion} from 'framer-motion';
 import {TabIconProps} from './TabIcon';
 import {transition} from 'lib/utils';

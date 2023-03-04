@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useState} from 'react';
+import {useCallback, useMemo} from 'react';
 import throttle from 'lodash.throttle';
 import {ensureClientSide} from 'lib/utils';
 import {compress, decompress} from 'lzutf8';

@@ -1,24 +1,8 @@
-import useFetch from 'lib/hooks/useFetch';
-import {
-  Box, Button,
-  Card,
-  Center,
-  Divider,
-  Heading, HStack,
-  ScaleFade,
-  Slide, Spacer,
-  Text,
-  useBoolean,
-  VStack,
-  Wrap,
-  WrapItem
-} from '@chakra-ui/react';
+import {Box, Button, Divider, Heading, HStack, Spacer, Text, VStack, Wrap} from '@chakra-ui/react';
 import type {Health} from 'lib/types/health';
-import {useEffect, useState} from 'react';
-import {request, round, transition} from 'lib/utils';
+import {round, transition} from 'lib/utils';
 import useRequest from 'lib/hooks/useRequest';
-import {Database, Server} from 'react-feather';
-import {motion} from 'framer-motion';
+import {Server} from 'react-feather';
 
 function Item({lines, header, isCluster = false}) {
   return (

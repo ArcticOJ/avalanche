@@ -1,5 +1,4 @@
 import {notify} from 'lib/notifications';
-import {start} from '@popperjs/core';
 
 export function ensureClientSide<T>(callback: () => T): () => T {
   return 'window' in global ? callback : () => null;

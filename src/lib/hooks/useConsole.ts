@@ -2,8 +2,6 @@ import {MutableRefObject, useCallback, useEffect, useRef} from 'react';
 import type {Terminal} from 'xterm';
 import type {FitAddon} from 'xterm-addon-fit';
 import throttle from 'lodash.throttle';
-import {useIsomorphicLayoutEffect} from 'framer-motion';
-import {bool} from 'yup';
 
 interface ConsoleHandler {
   inputRef: MutableRefObject<HTMLTextAreaElement>;

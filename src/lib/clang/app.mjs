@@ -15,16 +15,16 @@ export class App {
 
         // Fill in some WASI implementations from memfs.
         Object.assign(wasi_unstable, this.memfs.exports);
-        console.log(memfs)
         this.ready = getInstance(module, {
             wasi_unstable, env,
             js: {
-                mem: memfs.memory
+                mem: memfs.mem
             }
         }).then(instance => {
             this.instance = instance;
             this.exports = this.instance['exports'];
             this.mem = new Memory(this.exports.memory);
+            this.memfs.hostMem = this.mem;
         });
     }
 
@@ -32,10 +32,8 @@ export class App {
         await this.ready;
         try {
             this.exports._start();
-            //this.memfs.dispatch('spawn', this.exports);
         } catch (exn) {
             let writeStack = true;
-            console.log(exn);
             if (exn instanceof ProcExit) {
                 if (exn.code === RAF_PROC_EXIT_CODE) {
                     console.log('Allowing rAF after exit.');

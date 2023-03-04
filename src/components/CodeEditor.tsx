@@ -1,10 +1,9 @@
-import ReactCodeMirror, {basicSetup, ReactCodeMirrorRef} from '@uiw/react-codemirror';
+import ReactCodeMirror, {ReactCodeMirrorRef} from '@uiw/react-codemirror';
 import vscodeDark from 'lib/themes/editor';
 import '@fontsource/inconsolata/500.css';
 import 'xterm/css/xterm.css';
 import {Allotment} from 'allotment';
 import {
-  Check,
   CheckCircle,
   Clipboard,
   Code as CodeIcon,
@@ -14,12 +13,12 @@ import {
   Icon,
   Play,
   Scissors,
-  Send,
-  X
+  Send
 } from 'react-feather';
 import {
   Button,
-  ButtonGroup, Center,
+  ButtonGroup,
+  Center,
   chakra,
   Code,
   Flex,
@@ -30,9 +29,8 @@ import {
   MenuList,
   MenuOptionGroup,
   Portal,
-  Spacer, Spinner,
-  Tab,
-  TabList,
+  Spacer,
+  Spinner,
   TabPanel,
   TabPanels,
   Tabs,
@@ -50,9 +48,8 @@ import type {EditorView} from '@codemirror/view';
 import useCodeCache from 'lib/hooks/useCodeCache';
 import useSubmit from 'lib/hooks/useSubmit';
 import {Verdict} from 'lib/types/submissions';
-import {TabItems, TabItem} from 'components/TabItem';
+import {TabItem, TabItems} from 'components/TabItem';
 import {transition} from 'lib/utils';
-import {indentUnit} from '@codemirror/language';
 
 interface MenuBarAction {
   icon: Icon;

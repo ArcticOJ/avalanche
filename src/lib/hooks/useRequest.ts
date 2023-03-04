@@ -1,5 +1,4 @@
 import {request} from 'lib/utils';
-import {Health} from 'lib/types/health';
 import {useEffect, useState} from 'react';
 
 interface RequestHandler<T> {

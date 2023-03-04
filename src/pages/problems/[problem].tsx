@@ -3,20 +3,7 @@ import {Allotment} from 'allotment';
 import dynamic from 'next/dynamic';
 import useQuery from 'lib/hooks/useQuery';
 import React, {useEffect} from 'react';
-import {
-  Box,
-  Button,
-  Code,
-  Icon,
-  IconButton,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Text,
-  VStack
-} from '@chakra-ui/react';
+import {Box, IconButton, TabPanel, TabPanels, Tabs} from '@chakra-ui/react';
 import {TabItem, TabItems} from 'components/TabItem';
 import {Clipboard, Clock, FileText} from 'react-feather';
 

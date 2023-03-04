@@ -1,3 +1,5 @@
+/* ALLOTMENT */
+
 :root {
     --focus-border: var(--chakra-colors-arctic-400, lightblue) !important;
     --separator-border: var(--chakra-colors-gray-800) !important;
@@ -6,6 +8,8 @@
 * {
     -webkit-user-drag: none;
 }
+
+/* CODEMIRROR */
 
 .cm-editor {
     height: 100%;
@@ -77,4 +81,10 @@
     font-family: 'Inconsolata', monospace !important;
     font-weight: 500 !important;
     font-size: 16px;
+}
+
+/* HEATMAP */
+
+svg.w-heatmap > text {
+    color: white;
 }

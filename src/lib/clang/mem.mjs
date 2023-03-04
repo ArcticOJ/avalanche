@@ -68,24 +68,25 @@ export class MemFS {
         this.stdinStr = options.stdinStr || '';
         this.stdinStrPos = 0;
         this.dispatch = options.dispatch;
-        this.hostMem_ = options.wmem;
+        this.hostMem = null;
+        this.mem = options.wmem;
         const env = getImportObject(this, ['abort', 'host_write', 'host_read', 'memfs_log', 'copy_in', 'copy_out']);
         this.ready = getInstance(options.compiledModule, {
             env,
             js: {
-                mem: this.hostMem
+                mem: this.mem
             }
         })
             .then(instance => {
                 this.instance = instance;
-                this.exports = instance.exports;
+                this.exports = this.instance.exports;
                 this.mem = new Memory(this.exports.memory);
                 this.exports.init();
             });
     }
 
-    get hostMem() {
-        return this.hostMem_;
+    set hostMem(mem) {
+        this.hostMem_ = mem;
     }
 
     setStdinStr(str) {
