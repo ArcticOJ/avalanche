@@ -1,0 +1,35 @@
+{
+  "auth": {
+    "login": "Đăng nhập",
+    "register": "Đăng kí",
+    "log2arctic": "Đăng nhập vào Arctic",
+    "reg4account": "Đăng kí tài khoản mới",
+    "rememberforxdays": "Nhớ tôi trong {{days}} ngày",
+    "forgotpwd": "Quên mật khẩu?",
+    "notloggedin": "Chưa đăng nhập",
+    "logout": "Đăng xuất",
+    "orloginwith": "hoặc đăng nhập với"
+  },
+  "language": {
+    "vi": "Tiếng Việt",
+    "en": "Tiếng Anh"
+  },
+  "routes": {
+    "feeds": "Bản tin",
+    "leaderboard": "Bảng xếp hạng",
+    "contests": "Cuộc thi",
+    "problems": "Bài tập",
+    "submissions": "Các bài nộp",
+    "server": "Máy chủ",
+    "adminpanel": "Admin panel"
+  },
+  "accepttoc": "Bằng cách đăng kí, bạn đồng ý với ",
+  "toc": "Điều khoản dịch vụ",
+  "sidebar": {
+    "usermenu": {
+      "lang": "Ngôn ngữ: {{lang}}",
+      "yourprofile": "Hồ sơ của bạn",
+      "userprefs": "Tuỳ chọn"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "log2arctic": "Login to Arctic",
+    "reg4account": "Register for an account",
+    "rememberforxdays": "Remember for {{days}} days",
+    "forgotpwd": "Forgot password?",
+    "notloggedin": "Not logged in",
+    "logout": "Logout",
+    "orloginwith": "Or login with"
+  },
+  "language": {
+    "vi": "Vietnamese",
+    "en": "English"
+  },
+  "routes": {
+    "feeds": "Feeds",
+    "leaderboard": "Leaderboard",
+    "contests": "Contests",
+    "problems": "Problems",
+    "submissions": "Submissions",
+    "server": "Server",
+    "adminpanel": "Admin panel"
+  },
+  "accepttoc": "By registering, you accept our ",
+  "toc": "Terms and conditions",
+  "sidebar": {
+    "usermenu": {
+      "lang": "Language: {{lang}}",
+      "yourprofile": "Your profile",
+      "userprefs": "User preferences"
+    }
+  }
+}
