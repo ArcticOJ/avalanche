@@ -4,11 +4,11 @@
     "register": "Đăng kí",
     "log2arctic": "Đăng nhập vào Arctic",
     "reg4account": "Đăng kí tài khoản mới",
-    "rememberforxdays": "Nhớ tôi trong {{days}} ngày",
-    "forgotpwd": "Quên mật khẩu?",
-    "notloggedin": "Chưa đăng nhập",
+    "rememberMe": "Nhớ tôi",
+    "forgotPwd": "Quên mật khẩu?",
+    "notLoggedIn": "Chưa đăng nhập",
     "logout": "Đăng xuất",
-    "orloginwith": "hoặc đăng nhập với"
+    "orLoginWith": "hoặc đăng nhập với"
   },
   "language": {
     "vi": "Tiếng Việt",
@@ -22,15 +22,15 @@
     "submissions": "Các bài nộp",
     "server": "Máy chủ",
     "profile": "Hồ sơ",
-    "adminpanel": "Admin panel"
+    "adminPanel": "Admin panel"
   },
-  "accepttoc": "Bằng cách đăng kí, bạn đồng ý với ",
+  "acceptToc": "Bằng cách đăng kí, bạn đồng ý với ",
   "toc": "Điều khoản dịch vụ",
   "sidebar": {
-    "usermenu": {
+    "userMenu": {
       "lang": "Ngôn ngữ: {{lang}}",
-      "yourprofile": "Hồ sơ của bạn",
-      "userprefs": "Tuỳ chọn"
+      "yourProfile": "Hồ sơ của bạn",
+      "userPrefs": "Tuỳ chọn"
     }
   }
 }

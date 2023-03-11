@@ -16,12 +16,11 @@ import NextLink from 'next/link';
 import Gravatar from 'components/Gravatar';
 import Markdown from 'components/Markdown';
 import Section from 'components/Section';
-import {createElement} from 'react';
+import React, {createElement} from 'react';
 import {format} from 'fecha';
 import useRequiredAuth from 'lib/hooks/useRequiredAuth';
 import {TabItem} from 'components/TabItem';
-import HeatMap from '@uiw/react-heat-map';
-import '@uiw/react-heat-map/dist/heat-map.min.css';
+import HeatMap from 'components/HeatMap';
 
 function TextItem({label, icon, children}) {
   return (
@@ -95,11 +94,13 @@ export default function ProfilePage() {
                 This user has not obtained any prizes or awards.
               </Section>
               <Section title='Activity' icon={Activity} px={4} pb={4}>
-                <HeatMap rectSize={14} rectRender={(props, data) => (
-                  <Tooltip label={data.count} placement='top'>
-                    <rect {...props} rx={4} />
-                  </Tooltip>
-                )} />
+                <HeatMap startDate={new Date()} value={[
+                  {date: '2023/03/01', count: 5, content: 'test'},
+                  {date: '2023/03/02', count: 5, content: 'test'},
+                  {date: '2023/03/03', count: 1, content: 'test'},
+                  {date: '2023/03/04', count: 11, content: 'test'},
+                  {date: '2023/02/08', count: 32, content: 'test'}
+                ]} />
               </Section>
             </TabPanel>
           </TabPanels>

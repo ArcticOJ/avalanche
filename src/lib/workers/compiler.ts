@@ -1,10 +1,10 @@
 import type {WorkerEvent} from 'lib/types/common';
 
-import {Compiler} from 'lib/clang/compiler.mjs';
+import {Compiler} from 'lib/clang/compiler.js';
 
 const CDN_URL = '/static/clang';
 
-function dispatch(event: string, data?: any) {
+function emit(event: string, data?: any) {
   postMessage({
     event,
     data
@@ -14,7 +14,7 @@ function dispatch(event: string, data?: any) {
 const compiler = new Compiler({
   cdnUrl: `${CDN_URL}/`,
   showTiming: false,
-  onDispatch: dispatch
+  onEmit: emit
 });
 
 addEventListener('message', async (e: MessageEvent<WorkerEvent>) => {

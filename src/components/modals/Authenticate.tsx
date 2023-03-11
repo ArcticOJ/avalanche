@@ -3,12 +3,6 @@ import {
   HStack,
   Image,
   Link,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Spacer,
   TabList,
   TabPanel,
@@ -25,11 +19,12 @@ import TextField from 'components/TextField';
 import {notify} from 'lib/notifications';
 import CheckBox from 'components/CheckBox';
 import {request} from 'lib/utils';
-import {object as yupObject, ref as yupRef, string as yupString} from 'yup';
+import {bool as yupBool, object as yupObject, ref as yupRef, string as yupString} from 'yup';
 import PasswordBox from 'components/PasswordBox';
 import {useAuth} from 'lib/hooks/useAuth';
-import TabIcon from 'components/TabIcon';
 import {usei18n} from 'lib/hooks/usei18n';
+import BaseModal from 'components/modals/BaseModal';
+import TabIcon from 'components/TabIcon';
 
 function LoginForm() {
   const {revalidate} = useAuth();
@@ -42,7 +37,8 @@ function LoginForm() {
     }}
     validationSchema={yupObject({
       handle: yupString().required('Handle is required.').min(3, 'Handle should be longer than 3 characters.'),
-      password: yupString().required('Password is required.').min(6, 'Password must be at least 6 characters.')
+      password: yupString().required('Password is required.').min(6, 'Password must be at least 6 characters.'),
+      rememberMe: yupBool().default(true)
     })}
     onSubmit={async (values, {setSubmitting}) => {
       try {
@@ -64,13 +60,11 @@ function LoginForm() {
             <TextField placeholder='Password' icon={Lock} type='password' name='password' />
             <HStack>
               <FastField as={CheckBox} name='rememberMe'>
-                {t('auth.rememberforxdays', {
-                  days: 30
-                })}
+                {t('auth.rememberMe')}
               </FastField>
               <Spacer />
               <Link color='arctic.400' fontSize={13} fontWeight={600}>
-                {t('auth.forgotpwd')}
+                {t('auth.forgotPwd')}
               </Link>
             </HStack>
             <Button type='submit'
@@ -80,7 +74,7 @@ function LoginForm() {
               {t('auth.login')}
             </Button>
             <Separator>
-              {t('auth.orloginwith')}
+              {t('auth.orLoginWith')}
             </Separator>
             <HStack>
               <Button flex={1} colorScheme='gray' leftIcon={<GitHub size={16} />}>
@@ -147,7 +141,7 @@ function RegisterForm() {
               name='confirmPassword' />
             <TextField placeholder='Organization' icon={Briefcase} autoComplete='organization'
               name='organization' />
-            <Text fontSize={13} fontWeight={600}>{t('accepttoc')}<Link color='arctic.200'
+            <Text fontSize={13} fontWeight={600}>{t('acceptToc')}<Link color='arctic.200'
               fontSize={13}>{t('toc')}</Link></Text>
             <Button
               type='submit'
@@ -167,34 +161,25 @@ export default function AuthModal({isOpen, onClose}) {
   const [isLogin, {on, off}] = useBoolean(true);
   const {t} = usei18n();
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size='sm'>
-      <ModalOverlay />
-      <ModalContent bg='gray.800' borderRadius='xl'>
-        <ModalHeader fontWeight={700} fontSize='lg'>
-          {isLogin ? t('auth.log2arctic') : t('auth.reg4account')}
-        </ModalHeader>
-        <ModalCloseButton borderRadius='xl' m={2} />
-        <ModalBody p={0}>
-          <Tabs variant='filled' index={isLogin ? 0 : 1} onChange={c => c === 1 ? off() : on()} isFitted>
-            <TabList gap={2} mx={4}>
-              <TabIcon icon={LogIn}>
-                {t('auth.login')}
-              </TabIcon>
-              <TabIcon icon={Edit}>
-                {t('auth.register')}
-              </TabIcon>
-            </TabList>
-            <TabPanels>
-              <TabPanel>
-                <LoginForm />
-              </TabPanel>
-              <TabPanel>
-                <RegisterForm />
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
+    <BaseModal isOpen={isOpen} onClose={onClose} title={isLogin ? t('auth.log2arctic') : t('auth.reg4account')}>
+      <Tabs variant='filled' index={isLogin ? 0 : 1} onChange={c => c === 1 ? off() : on()} isFitted>
+        <TabList gap={2} mx={4}>
+          <TabIcon icon={LogIn}>
+            {t('auth.login')}
+          </TabIcon>
+          <TabIcon icon={Edit}>
+            {t('auth.register')}
+          </TabIcon>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <LoginForm />
+          </TabPanel>
+          <TabPanel>
+            <RegisterForm />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+    </BaseModal>
   );
 }

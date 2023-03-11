@@ -1,4 +1,4 @@
-import {AssertError} from './errors.mjs';
+import {AssertError} from './errors.js';
 
 export function readStr(u8, o, len = -1) {
   let str = '';

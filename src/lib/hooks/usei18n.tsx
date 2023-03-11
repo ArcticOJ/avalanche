@@ -31,7 +31,7 @@ export function usei18n(): i18nHandler {
 }
 
 export function TranslationProvider({children, defaultLanguage}: TranslationProviderProps) {
-  const {value, set} = useLocalStorage<Language>('arctic:language', defaultLanguage);
+  const {value, set} = useLocalStorage('arctic:language', defaultLanguage);
   const handler: i18nHandler = {
     t(key: string, obj: object): string {
       const transStr: any = key.split('.').reduce(

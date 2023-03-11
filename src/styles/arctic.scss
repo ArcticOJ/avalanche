@@ -1,0 +1,104 @@
+/* ALLOTMENT */
+
+:root {
+  --focus-border: var(--chakra-colors-arctic-400, lightblue) !important;
+  --separator-border: var(--chakra-colors-gray-800) !important;
+}
+
+* {
+  -webkit-user-drag: none;
+}
+
+/* CODEMIRROR */
+
+.cm-editor {
+  height: 100%;
+}
+
+.cm-searchMatch {
+  background: var(--chakra-colors-arctic-600) !important;
+
+  &.cm-searchMatch-selected {
+    background: var(--chakra-colors-yellow-800) !important;
+  }
+}
+
+.cm-button {
+  color: var(--chakra-colors-gray-800) !important;
+  align-self: center;
+  border-color: transparent !important;
+  background: var(--chakra-colors-arctic-200) !important;
+
+  &:hover {
+    background: var(--chakra-colors-arctic-300) !important;
+  }
+
+  &:active {
+    background: var(--chakra-colors-arctic-400) !important;
+  }
+}
+
+.cm-search {
+  background: var(--chakra-colors-gray-800);
+  padding: 0 12px 8px !important;
+
+  & > button[name='close'] {
+    background: none !important;
+    scale: 1.15;
+    padding-right: 8px !important;
+    font-size: 24px !important;
+  }
+
+  & > label {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 4px;
+
+    &:first-of-type {
+      margin-left: 8px !important;
+    }
+
+    & > input[type='checkbox'] {
+      scale: 1.2;
+    }
+  }
+}
+
+.cm-textfield {
+  outline: none !important;
+  border-width: 2px !important;
+  border-color: transparent !important;
+  background: var(--chakra-colors-gray-700) !important;
+
+  &:focus {
+    border-color: var(--chakra-colors-arctic-200, lightblue) !important;
+    background: var(--chakra-colors-gray-800) !important;
+  }
+}
+
+.cm-button, .cm-search label {
+  text-transform: capitalize;
+}
+
+.cm-textfield, .cm-button {
+  border-radius: var(--chakra-radii-xl) !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.cm-textfield, .cm-button, .cm-search > label {
+  height: var(--chakra-sizes-8) !important;
+  font-size: var(--chakra-fontSizes-sm) !important;
+  font-weight: 600 !important;
+}
+
+.cm-editor .cm-content, .cm-gutter {
+  font-family: 'Inconsolata', monospace !important;
+  font-weight: 500 !important;
+  font-size: 16px;
+}
+
+/* HEATMAP */
+
+svg.w-heatmap > text {
+  color: white;
+}

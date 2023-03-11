@@ -1,6 +1,5 @@
-import {useCallback, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {WorkerMessage} from 'lib/types/common';
-import {useIsomorphicLayoutEffect} from 'framer-motion';
 import {useBoolean} from '@chakra-ui/react';
 import throttle from 'lodash.throttle';
 
@@ -20,6 +19,8 @@ interface CompilerHandler {
   compile(std: string): void;
 
   enable(): void;
+
+  abort(): void;
 }
 
 export default function useCompiler({stdin, stdout, content}: CompilerParameters): CompilerHandler {
@@ -43,17 +44,17 @@ export default function useCompiler({stdin, stdout, content}: CompilerParameters
       stdout(e.data.data);
       break;
     case 'compileStart':
+      on();
+      break;
     case 'compileEnd':
-      if (e.data.event === 'compileStart')
-        on();
-      else
-        off();
+      off();
       break;
     }
   };
-  useIsomorphicLayoutEffect(() => {
+  useEffect(() => {
     worker.current = new Worker(new URL('lib/workers/compiler.ts', import.meta.url), {
-      name: 'compiler'
+      name: 'compiler',
+      type: 'module'
     });
     worker.current.addEventListener('message', onMessage);
     return () => {
@@ -66,6 +67,12 @@ export default function useCompiler({stdin, stdout, content}: CompilerParameters
     ready,
     enabled,
     enable,
+    abort() {
+      if (ready && running)
+        worker.current.postMessage({
+          type: 'abort'
+        });
+    },
     compile(std) {
       if (ready)
         worker.current.postMessage({

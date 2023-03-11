@@ -30,7 +30,6 @@ import {
   Icon,
   LogOut,
   Send,
-  Server,
   Settings,
   Shield,
   TrendingUp,
@@ -45,6 +44,8 @@ import NextLink from 'next/link';
 import Gravatar from 'components/Gravatar';
 import {usei18n} from 'lib/hooks/usei18n';
 import {transition} from 'lib/utils';
+import Snowflakes from 'components/Snowflakes';
+import {usePathname} from 'next/navigation';
 
 interface Route {
   route: string;
@@ -77,17 +78,12 @@ const routes: Route[] = [
     icon: Send,
     key: 'submissions',
     route: '/submissions'
-  },
-  {
-    icon: Server,
-    key: 'server',
-    route: '/server'
   }
 ];
 
 const adminRoute: Route = {
   route: '/admin',
-  key: 'adminpanel',
+  key: 'adminPanel',
   icon: Shield
 };
 
@@ -208,11 +204,11 @@ function UserInfo({collapsed, user, onLogOut}: { collapsed: boolean, user: User,
       </MenuButton>
       <MenuList>
         <MenuItem as={NextLink} href='/profile'
-          icon={<UserIcon size={16} />}>{t('sidebar.usermenu.yourprofile')}</MenuItem>
-        <MenuItem icon={<Settings size={16} />}>{t('sidebar.usermenu.userprefs')}</MenuItem>
+          icon={<UserIcon size={16} />}>{t('sidebar.userMenu.yourProfile')}</MenuItem>
+        <MenuItem icon={<Settings size={16} />}>{t('sidebar.userMenu.userPrefs')}</MenuItem>
         <MenuItem icon={<Image alt={currentLanguage} src={`/static/flags/${currentLanguage}.png`} boxSize={4} />}
           onClick={switchLanguage}>
-          {t('sidebar.usermenu.lang', {
+          {t('sidebar.userMenu.lang', {
             lang: t(`language.${currentLanguage}`)
           })}
         </MenuItem>
@@ -239,7 +235,7 @@ function AuthModalOpener({collapsed}) {
       <Tooltip isDisabled={!collapsed} label={
         <div>
           <p>
-            {t('auth.notloggedin')}
+            {t('auth.notLoggedIn')}
           </p>
           <p>
             Click to authenticate.
@@ -253,7 +249,7 @@ function AuthModalOpener({collapsed}) {
             {!collapsed && (
               <VStack spacing={0} align='start'>
                 <Text color='white' fontSize={14}>
-                  {t('auth.notloggedin')}
+                  {t('auth.notLoggedIn')}
                 </Text>
                 <Text fontSize={11}>
                   Click to login
@@ -267,13 +263,21 @@ function AuthModalOpener({collapsed}) {
   );
 }
 
+function getRootRoute(path: string): string {
+  if (!path)
+    return '';
+  if (path.startsWith('/'))
+    path = path.substring(1);
+  return '/' + path.split('/').shift();
+}
+
 function Sidebar() {
   const {isLoggedIn, user, logout} = useAuth();
-  const {pathname, asPath} = useRouter();
+  const pathname = usePathname();
   const {isOpen, onToggle} = useDisclosure({
     defaultIsOpen: true
   });
-  const currentRoute = useMemo(() => pathname.replaceAll(/\/\[.+]/ig, ''), [pathname, asPath]);
+  const currentRoute = useMemo(() => getRootRoute(pathname), [pathname]);
   return (
     <AnimatedDiv p={2} h='100vh' display='flex' flexDir='column' gap={2} animate={{
       minWidth: isOpen ? 192 : 0
@@ -296,6 +300,7 @@ function Sidebar() {
       <Spacer />
       <Text>
       </Text>
+      <Snowflakes />
       <Divider />
       {isLoggedIn ? (
         <UserInfo collapsed={!isOpen} user={user} onLogOut={logout} />

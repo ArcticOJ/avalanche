@@ -1,5 +1,5 @@
-import {App} from 'lib/clang/app.mjs';
-import {MemFS} from 'lib/clang/mem.mjs';
+import {App} from 'lib/clang/app.js';
+import {MemFS} from 'lib/clang/mem.js';
 
 interface CompiledBinary {
   fileName: string;
@@ -13,7 +13,7 @@ interface MemObj {
   wmem: WebAssembly.Memory;
 }
 
-function dispatch(event: string, data?: any) {
+function emit(event: string, data?: any) {
   console.log(event, data);
   postMessage({
     event,
@@ -25,13 +25,12 @@ addEventListener('message', async (e: MessageEvent<CompiledBinary>) => {
   const memfs = new MemFS({
     wmem: e.data.mem.wmem,
     compiledModule: e.data.mem.fs,
-    dispatch
+    emit
   });
   memfs.setStdinStr(e.data.stdin);
   if (!e.data.buf || e.data.buf.length == 0)
     return;
   const mod = await WebAssembly.compile(e.data.buf);
   const app = new App(mod, memfs, 'main.wasm');
-  await app.run();
-  dispatch('done', Date.now());
+  await app.run().finally(() => emit('done', Date.now()));
 });

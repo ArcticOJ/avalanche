@@ -30,7 +30,7 @@ export function AuthProvider({children}: PropsWithChildren) {
   };
   const revalidate = async () => {
     await mutate(null, {
-      rollbackOnError: true
+      rollbackOnError: false
     });
   };
   const handler = useMemo<AuthHandler>(() => ({

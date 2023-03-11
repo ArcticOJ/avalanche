@@ -26,10 +26,9 @@ import {
   Tr,
   useClipboard
 } from '@chakra-ui/react';
-import theme from 'prism-react-renderer/themes/vsDark';
-import Highlight, {defaultProps, Language} from 'prism-react-renderer';
 import {Check, Copy} from 'react-feather';
 import CheckBox from 'components/CheckBox';
+import Prism from 'components/Prism';
 
 export interface MarkdownProps {
   style?: CSSProperties;
@@ -89,7 +88,7 @@ const componentRenderers: Components = {
   code: ({children, inline, className}) => {
     if (inline)
       return (
-        <Code fontFamily='"Inconsolata", monospace' fontWeight={600} fontSize={13} borderRadius='md' bg='gray.800'>
+        <Code fontFamily='"Inconsolata", monospace' fontSize={13} borderRadius='md' bg='gray.800'>
           {children}
         </Code>
       );
@@ -113,28 +112,9 @@ const componentRenderers: Components = {
           </Button>
         </HStack>
         <Divider />
-        <Highlight {...defaultProps} code={content}
-          language={language as Language} theme={theme}>
-          {({className, style, tokens, getLineProps, getTokenProps}) => (
-            <pre className={className} style={{
-              fontFamily: '"Inconsolata", monospace',
-              fontWeight: 600,
-              fontSize: 13,
-              borderBottomLeftRadius: 'var(--chakra-radii-lg)',
-              borderBottomRightRadius: 'var(--chakra-radii-lg)',
-              padding: 'var(--chakra-space-4)',
-              ...style
-            }}>
-              {tokens.map((line, i) => (
-                <Box key={i} {...getLineProps({line})}>
-                  {line.map((token, key) => (
-                    <span key={key} {...getTokenProps({token})} />
-                  ))}
-                </Box>
-              ))}
-            </pre>
-          )}
-        </Highlight>
+        <Prism code={content} language={language} containerStyle={{
+          padding: 8
+        }} />
       </Box>
     );
   },

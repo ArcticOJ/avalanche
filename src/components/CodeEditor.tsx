@@ -41,15 +41,16 @@ import useCompiler from 'lib/hooks/useCompiler';
 import useConsole from 'lib/hooks/useConsole';
 import React, {createElement, PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {editorLanguages, languageDefinitions, languages} from 'lib/constants';
-import {Compartment, EditorState} from '@codemirror/state';
+import {Compartment} from '@codemirror/state';
 import useClippy from 'lib/hooks/useClippy';
 import useContextMenu from 'lib/hooks/useContextMenu';
 import type {EditorView} from '@codemirror/view';
-import useCodeCache from 'lib/hooks/useCodeCache';
 import useSubmit from 'lib/hooks/useSubmit';
 import {Verdict} from 'lib/types/submissions';
 import {TabItem, TabItems} from 'components/TabItem';
 import {transition} from 'lib/utils';
+import SearchPanel from 'components/SearchPanel';
+import useCodeCache from 'lib/hooks/useCodeCache';
 
 interface MenuBarAction {
   icon: Icon;
@@ -57,7 +58,7 @@ interface MenuBarAction {
     normal: string;
     hover: string;
     active: string;
-  }
+  };
 
   onInvoke?();
 }
@@ -121,9 +122,12 @@ function handleOnSave(e) {
 export default function CodeEditor() {
   const languageConf = useMemo(() => new Compartment(), []);
   const editorRef = useRef<ReactCodeMirrorRef>();
+  const searchPanelRef = useRef<HTMLElement>();
+  // TODO: make searchPanel, contextMenu and autoSave extensions.
   const [tab, setTab] = useState(1);
   const [language, setLanguage] = useState('gnu++11');
   const {copy, value} = useClippy();
+  const {init, save} = useCodeCache();
   useEffect(() => {
     document.addEventListener('keydown', handleOnSave, false);
     return () => document.removeEventListener('keydown', handleOnSave, false);
@@ -185,177 +189,174 @@ export default function CodeEditor() {
       }
     }
   ]);
-  const {enabled, ready, compile, enable, running} = useCompiler({
+  const {enabled, ready, compile, enable, running, abort} = useCompiler({
     stdin(): string {
       return read();
     },
     content(): string {
-      return Array.from(editorRef.current.view.state.doc).filter(str => str.trim() !== '').join(editorRef.current.state.lineBreak);
+      return editorRef.current.view.state.sliceDoc();
     },
     stdout(s) {
       write(s);
     }
   });
   const {inputRef, outputRef, write, read, clear, triggerFit} = useConsole(ready);
-  const {load, save} = useCodeCache();
-  const {status, submit} = useSubmit();
-  const onLoad = useCallback((view: EditorView) => {
-    setTimeout(async () => {
-      const {json, fields} = await load();
-      console.log(json);
-      if (json.hasOwnProperty('doc')) {
-        view.setState(EditorState.fromJSON(json, {}, fields));
-      } else {
-        const template = await fetch('/static/templates/cpp').then(r => r.ok ? r.text() : '');
-        view.setState(EditorState.create({
-          doc: template
-        }));
-      }
-    }, 200);
+  //  const {load, save} = useCodeCache();
+  const {status, submit, submitModal} = useSubmit();
+  const onLoad = useCallback(async (view: EditorView) => {
+    await init(view);
+    // TODO: create templates.json for all templates
     bind(view.dom);
   }, []);
-  return <>
-    <Allotment vertical onChange={triggerFit}>
-      <Allotment.Pane minSize={300}>
-        <Flex direction='column' h='100%'>
-          <ChakraEditor onChange={(_, view) => save(view.state)} flex={1} h='100%'
-            extensions={[
-              languageConf.of(languageDefinitions['cpp']())
-            ]}
-            basicSetup={{
-              bracketMatching: true,
-              foldGutter: false,
-              autocompletion: true,
-              tabSize: 2
-            }}
-            placeholder='Write some code and press Run to compile.'
-            autoFocus
-            overflow='auto' ref={editorRef}
-            theme={vscodeDark}
-            onCreateEditor={onLoad}>
-            {menu}
-          </ChakraEditor>
-          <Flex bg='gray.800' minH='24px' h='24px' maxH='24px'>
-            {/* TODO: Make this working */}
-            <StatusBarItem bg={statusColor('arctic')} icon={CheckCircle}>
-              Successfully compiled
-            </StatusBarItem>
-            <Spacer />
-            <Menu>
-              <MenuButton as={StatusBarItem} icon={CodeIcon}>
-                {languages[language]}
-              </MenuButton>
-              <Portal>
-                <MenuList>
-                  <MenuOptionGroup type='radio' value={language}
-                    onChange={(value: string) => {
-                      const lang = Object.entries(editorLanguages).find(([_, l]) => l.includes(value)).shift();
-                      if (typeof lang === 'string')
-                        editorRef.current.view.dispatch({
-                          effects: languageConf.reconfigure(languageDefinitions[lang]())
-                        });
-                      setLanguage(value);
-                    }}>
-                    {Object.entries(languages).map(([id, label]) => <MenuItemOption value={id} key={id}>
-                      {label}
-                    </MenuItemOption>)}
-                  </MenuOptionGroup>
-                </MenuList>
-              </Portal>
-            </Menu>
+  return (
+    <>
+      {submitModal}
+      <Allotment vertical onChange={triggerFit}>
+        <Allotment.Pane minSize={300}>
+          <Flex direction='column' h='100%'>
+            <ChakraEditor position='relative' onChange={save} flex={1} h='100%'
+              extensions={[
+                // TODO: override search panel
+                languageConf.of(languageDefinitions['cpp']())
+              ]}
+              basicSetup={{
+                bracketMatching: true,
+                foldGutter: false,
+                autocompletion: true,
+                completionKeymap: true,
+                searchKeymap: false,
+                tabSize: 2
+              }}
+              placeholder='Write some code and press Run to compile.'
+              overflow='auto' ref={editorRef}
+              theme={vscodeDark}
+              onCreateEditor={onLoad}>
+              <SearchPanel editorRef={editorRef} />
+              {menu}
+            </ChakraEditor>
+            <Flex bg='gray.800' minH='24px' h='24px' maxH='24px'>
+              {/* TODO: Make this working */}
+              <StatusBarItem bg={statusColor('arctic')} icon={CheckCircle}>
+                Successfully compiled
+              </StatusBarItem>
+              <Spacer />
+              <Menu>
+                <MenuButton as={StatusBarItem} icon={CodeIcon}>
+                  {languages[language]}
+                </MenuButton>
+                <Portal>
+                  <MenuList>
+                    <MenuOptionGroup type='radio' value={language}
+                      onChange={(value: string) => {
+                        const lang = Object.entries(editorLanguages).find(([_, l]) => l.includes(value)).shift();
+                        if (typeof lang === 'string')
+                          editorRef.current.view.dispatch({
+                            effects: languageConf.reconfigure(languageDefinitions[lang]())
+                          });
+                        setLanguage(value);
+                      }}>
+                      {Object.entries(languages).map(([id, label]) => <MenuItemOption value={id} key={id}>
+                        {label}
+                      </MenuItemOption>)}
+                    </MenuOptionGroup>
+                  </MenuList>
+                </Portal>
+              </Menu>
+            </Flex>
           </Flex>
-        </Flex>
-      </Allotment.Pane>
-      <Allotment.Pane minSize={300} preferredSize={300}>
-        <Tabs colorScheme='arctic' size='sm' index={tab} onChange={setTab} h='100%'>
-          <TabItems>
-            <TabItem>
-              Input
-            </TabItem>
-            <TabItem>
-              Output
-            </TabItem>
-            <Spacer />
-            <ButtonGroup isAttached size='xs' px={1} alignSelf='center'>
-              {/* TODO: Ability to stop running application */}
-              <Button leftIcon={<Play size={12} />} variant='outline' borderRadius='lg'
-                isDisabled={!enabled}
-                loadingText='Initializing'
-                isLoading={!ready && enabled}
-                onClick={() => {
-                  setTab(1);
-                  if (!running) {
-                    clear();
-                    compile(language);
-                  }
-                }}>
-                {enabled ? (running ? 'Stop' : 'Run') : 'Unavailable'}
-              </Button>
-              <Button rightIcon={<Send size={12} />} isLoading={status !== Verdict.None}
-                loadingText={Verdict[status]} borderRadius='lg'
-                onClick={() => {
-                  submit();
-                }}>
-                Submit
-              </Button>
-            </ButtonGroup>
-          </TabItems>
-          <TabPanels sx={{
-            h: '100%',
-            '&>div': {
-              h: '100%'
-            }
-          }}>
-            {!(enabled && ready) && <Center h='100%' w='100%' position='absolute' bg='gray.900'>
-              {enabled ? (
-                <VStack spacing={8}>
-                  <Spinner size='xl' color='arctic.200' />
-                  <Text>
-                    Initializing <Code>clang</Code> compiler.
-                  </Text>
-                </VStack>
-              ) : (
-                <VStack>
-                  <Text>
-                    C++ compiler is not enabled, do you want to enable it now?
-                  </Text>
-                  <Text fontSize={11}>
-                    Memory usage and network bandwidth might increase noticeably when loading the compiler!
-                  </Text>
-                  <Button onClick={enable} isLoading={enabled && !ready}>
-                    Enable C++ compiler
-                  </Button>
-                </VStack>
-              )}
-            </Center>}
-            <TabPanel p={0}>
-              <chakra.textarea placeholder='Type your input here' bg='gray.900' ref={inputRef} px={4} py={2} mb={40}
-                resize='none' outline='none' h='100%'
-                boxSizing='border-box'
-                w='100%'
-                _hover={{
-                  bg: 'gray.800'
-                }}
-                _focus={{
-                  bg: 'gray.800'
-                }}
-                _active={{
-                  bg: 'gray.700'
-                }}
-                transition={transition(0.1)}
-                fontWeight={600}
-                fontSize={14}
-                overflow='auto' />
-            </TabPanel>
-            <TabPanel p={0}>
-              <div ref={outputRef} style={{
-                width: '100%',
-                height: '100%'
-              }} />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </Allotment.Pane>
-    </Allotment>
-  </>;
+        </Allotment.Pane>
+        <Allotment.Pane minSize={300} preferredSize={300}>
+          <Tabs colorScheme='arctic' size='sm' index={tab} onChange={setTab} h='100%'>
+            <TabItems>
+              <TabItem>
+                Input
+              </TabItem>
+              <TabItem>
+                Output
+              </TabItem>
+              <Spacer />
+              <ButtonGroup isAttached size='xs' px={1} alignSelf='center'>
+                <Button leftIcon={<Play size={12} />} variant='outline' borderRadius='lg'
+                  isDisabled={!enabled}
+                  loadingText='Initializing'
+                  isLoading={!ready && enabled}
+                  onClick={() => {
+                    setTab(1);
+                    if (!running) {
+                      clear();
+                      compile(language);
+                    } else {
+                      abort();
+                    }
+                  }}>
+                  {enabled ? (running ? 'Stop' : 'Run') : 'Unavailable'}
+                </Button>
+                <Button rightIcon={<Send size={12} />} isLoading={status !== Verdict.None}
+                  loadingText={Verdict[status]} borderRadius='lg'
+                  onClick={async () => {
+                    await submit();
+                  }}>
+                  Submit
+                </Button>
+              </ButtonGroup>
+            </TabItems>
+            <TabPanels sx={{
+              h: '100%',
+              '&>div': {
+                h: '100%'
+              }
+            }}>
+              {!(enabled && ready) && <Center h='100%' w='100%' position='absolute' bg='gray.900'>
+                {enabled ? (
+                  <VStack spacing={8}>
+                    <Spinner size='xl' color='arctic.200' />
+                    <Text>
+                      Initializing <Code>clang</Code> compiler.
+                    </Text>
+                  </VStack>
+                ) : (
+                  <VStack>
+                    <Text>
+                      C++ compiler is not enabled, do you want to enable it now?
+                    </Text>
+                    <Text fontSize={11}>
+                      Memory usage and network bandwidth might increase noticeably when loading the compiler!
+                    </Text>
+                    <Button onClick={enable} isLoading={enabled && !ready}>
+                      Enable C++ compiler
+                    </Button>
+                  </VStack>
+                )}
+              </Center>}
+              <TabPanel p={0}>
+                <chakra.textarea placeholder='Type your input here' bg='gray.900' ref={inputRef} px={4} py={2} mb={40}
+                  resize='none' outline='none' h='100%'
+                  boxSizing='border-box'
+                  w='100%'
+                  _hover={{
+                    bg: 'gray.800'
+                  }}
+                  _focus={{
+                    bg: 'gray.800'
+                  }}
+                  _active={{
+                    bg: 'gray.700'
+                  }}
+                  transition={transition(0.1)}
+                  fontWeight={600}
+                  fontSize={14}
+                  overflow='auto' />
+              </TabPanel>
+              <TabPanel p={0}>
+                <div ref={outputRef} style={{
+                  width: '100%',
+                  height: '100%'
+                }} />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </Allotment.Pane>
+      </Allotment>
+    </>
+  );
 }

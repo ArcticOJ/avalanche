@@ -1,4 +1,5 @@
 import {notify} from 'lib/notifications';
+import {units} from 'lib/constants';
 
 export function ensureClientSide<T>(callback: () => T): () => T {
   return 'window' in global ? callback : () => null;
@@ -13,6 +14,10 @@ interface FetchParameters<TBody, TMonitor> {
   headers?: Record<string, string>;
 }
 
+export function classes(...classNames: string[]): string {
+  return classNames.join(' ');
+}
+
 export function transition(dura = 0.2, scope = 'all'): string {
   return `${scope} ${dura}s ease-in-out`;
 }
@@ -20,6 +25,19 @@ export function transition(dura = 0.2, scope = 'all'): string {
 export function round(num: number, precision: number) {
   const l = Math.pow(10, precision);
   return Math.round((num + Number.EPSILON) * l) / l;
+}
+
+export function prettyBytes(bytes: number): string {
+  let i = 0;
+  if (isNaN(bytes) || !isFinite(bytes) || !bytes) return '0 B';
+  const isNegative = bytes < 0;
+  if (isNegative)
+    bytes *= -1;
+  while (bytes >= 1024 && i < units.length - 1) {
+    bytes /= 1024;
+    i++;
+  }
+  return `${+((isNegative ? -bytes : bytes).toFixed(1))} ${units[i]}`;
 }
 
 export async function request<TBody = never, TResponse = any, TMonitor extends boolean = false>({
@@ -57,4 +75,8 @@ export async function request<TBody = never, TResponse = any, TMonitor extends b
     notify('Request failed', e.message || e.name, 'error');
     throw e;
   }
+}
+
+export async function sleep(timeout: number) {
+  return await new Promise((resolve) => setTimeout(resolve, timeout));
 }

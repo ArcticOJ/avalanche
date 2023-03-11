@@ -29,21 +29,28 @@ export default function ProfileEdit() {
           </NumberDecrementStepper>
         </NumberInputStepper>
       </NumberInput>
-      <TextBox placeholder='API key' icon={Key} isReadOnly>
-        {data ? data.apiKey : ''}
-      </TextBox>
+      {/* TODO: censor api key text box */}
+      <TextBox placeholder='API key' icon={Key} isReadOnly sx={{
+        textShadow: '0 0 5px rgba(0,0,0,0.5)'
+      }} value={data ? data.apiKey : ''} />
       <ButtonGroup isAttached>
         <Button leftIcon={<Clipboard size={16} />}
           onClick={() => notify('Hello World', <Button onClick={() => alert('uwu')} />)}>
           Copy
         </Button>
-        <Button rightIcon={<RefreshCw size={16} />} onClick={() => {
-          request({
+        <Button rightIcon={<RefreshCw size={16} />} onClick={async () => {
+          const res = await request({
             endpoint: '/api/user/apiKey',
             method: 'PATCH'
-          }).finally(() => mutate(null, {
+          });
+          if (!(res && res.hasOwnProperty('apiKey'))) {
+            // TODO: handle regeneration error
+            return;
+          }
+          await mutate(res, {
+            revalidate: false,
             rollbackOnError: false
-          }));
+          });
         }}>
           Regenerate
         </Button>

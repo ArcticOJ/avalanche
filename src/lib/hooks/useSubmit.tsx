@@ -1,7 +1,9 @@
-import {useCallback, useState} from 'react';
+import {ReactElement, useCallback, useState} from 'react';
 import {Verdict} from 'lib/types/submissions';
 import throttle from 'lodash.throttle';
 import useQuery from 'lib/hooks/useQuery';
+import {useBoolean, useDisclosure} from '@chakra-ui/react';
+import SubmitModal from 'components/modals/Submit';
 
 interface JudgementStatus {
   status: Verdict;
@@ -10,21 +12,26 @@ interface JudgementStatus {
 }
 
 interface SubmitHandler {
+  submitModal: ReactElement;
   status: Verdict;
 
-  submit(): Promise<void>;
+  submit(): void;
 }
 
 export default function useSubmit(): SubmitHandler {
   const [finalStatus, setFinalStatus] = useState<Verdict>(Verdict.None);
   const problem = useQuery('problem');
-  const [busy, setBusy] = useState(false);
-  const onSubmit = useCallback(throttle(async () => {
-    setBusy(true);
+  const {isOpen, onOpen, onClose} = useDisclosure();
+  const [busy, {off, on}] = useBoolean();
+  const onSubmit = useCallback(throttle(async (file: File) => {
+    on();
+    const formData = new FormData();
+    formData.append('code', file);
     const r = await fetch(`/api/contests/${problem}/submit`, {
-      method: 'POST'
+      method: 'POST',
+      body: formData
     });
-    if (r.ok) {
+    if (r.ok && r.headers.get('transfer-encoding') === 'chunked') {
       const reader = r.body.pipeThrough(new TextDecoderStream()).getReader();
       while (true) {
         const {done, value} = await reader.read();
@@ -38,14 +45,17 @@ export default function useSubmit(): SubmitHandler {
             break;
         }
       }
-      setBusy(false);
+      off();
     } else
-      setBusy(false);
+      off();
     setTimeout(() => setFinalStatus(Verdict.None), 2e3);
   }, 2e3),
   []);
   return {
+    submitModal: (
+      <SubmitModal isOpen={isOpen} onClose={onClose} callback={onSubmit} isBusy={busy} />
+    ),
     status: finalStatus,
-    submit: onSubmit
+    submit: onOpen
   };
 }

@@ -4,11 +4,11 @@
     "register": "Register",
     "log2arctic": "Login to Arctic",
     "reg4account": "Register for an account",
-    "rememberforxdays": "Remember for {{days}} days",
-    "forgotpwd": "Forgot password?",
-    "notloggedin": "Not logged in",
+    "rememberMe": "Remember me",
+    "forgotPwd": "Forgot password?",
+    "notLoggedIn": "Not logged in",
     "logout": "Logout",
-    "orloginwith": "Or login with"
+    "orLoginWith": "Or login with"
   },
   "language": {
     "vi": "Vietnamese",
@@ -22,15 +22,15 @@
     "submissions": "Submissions",
     "server": "Server",
     "profile": "Profile",
-    "adminpanel": "Admin panel"
+    "adminPanel": "Admin panel"
   },
-  "accepttoc": "By registering, you accept our ",
+  "acceptToc": "By registering, you accept our ",
   "toc": "Terms and conditions",
   "sidebar": {
-    "usermenu": {
+    "userMenu": {
       "lang": "Language: {{lang}}",
-      "yourprofile": "Your profile",
-      "userprefs": "User preferences"
+      "yourProfile": "Your profile",
+      "userPrefs": "User preferences"
     }
   }
 }

@@ -8,7 +8,8 @@ import {TabItem, TabItems} from 'components/TabItem';
 import {Clipboard, Clock, FileText} from 'react-feather';
 
 const CodeEditor = dynamic(() => import('components/CodeEditor'), {
-  suspense: true
+  suspense: true,
+  ssr: false
 });
 
 export default function Problem() {
