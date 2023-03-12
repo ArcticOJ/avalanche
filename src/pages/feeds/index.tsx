@@ -16,11 +16,16 @@ import {
   Text,
   VStack
 } from '@chakra-ui/react';
-import Markdown from 'components/Markdown';
 import {ExternalLink, MessageSquare, Share2} from 'react-feather';
 import NextLink from 'next/link';
 import React from 'react';
 import {transition} from 'lib/utils';
+import dynamic from 'next/dynamic';
+
+const Markdown = dynamic(() => import('components/Markdown'), {
+  suspense: true,
+  ssr: false
+});
 
 export default function Feeds() {
   const {data} = useFetch<Feed[]>('/api/feeds', {

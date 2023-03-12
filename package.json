@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "dot_clean src && next build",
+    "build": "next build",
+    "build:osx": "dot_clean src && next build",
     "start": "next start",
     "lint": "next lint",
     "export": "next export"

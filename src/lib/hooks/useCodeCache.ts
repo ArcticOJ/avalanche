@@ -17,6 +17,8 @@ interface CacheHandler {
 const fields = {history: historyField, fold: foldState};
 
 export default function useCodeCache(): CacheHandler {
+  // TODO: per-problem code cache, using indexeddb
+
   const {set, get} = useLocalStorage('arctic:code', '', false);
   const save = useCallback(throttle((_, update: ViewUpdate) =>
     set(compress(JSON.stringify(update.state.toJSON(fields)), {

@@ -221,7 +221,7 @@ export default function CodeEditor() {
               ]}
               basicSetup={{
                 bracketMatching: true,
-                foldGutter: false,
+                foldGutter: true,
                 autocompletion: true,
                 completionKeymap: true,
                 searchKeymap: false,

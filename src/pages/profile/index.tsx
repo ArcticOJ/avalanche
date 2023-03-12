@@ -14,13 +14,18 @@ import {
 import {Activity, Award, BookOpen, Briefcase, Clock, DivideSquare, Edit, Info, Users, Watch} from 'react-feather';
 import NextLink from 'next/link';
 import Gravatar from 'components/Gravatar';
-import Markdown from 'components/Markdown';
 import Section from 'components/Section';
 import React, {createElement} from 'react';
 import {format} from 'fecha';
 import useRequiredAuth from 'lib/hooks/useRequiredAuth';
 import {TabItem} from 'components/TabItem';
 import HeatMap from 'components/HeatMap';
+import dynamic from 'next/dynamic';
+
+const Markdown = dynamic(() => import('components/Markdown'), {
+  suspense: true,
+  ssr: false
+});
 
 function TextItem({label, icon, children}) {
   return (
