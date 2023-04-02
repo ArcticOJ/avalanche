@@ -13,7 +13,7 @@ const nextConfig = {
 
 module.exports = removeImports({
   ...withAnalyzer(nextConfig),
-  webpack(config, options) {
+  webpack(config) {
     return config;
   }
 });

@@ -16,7 +16,7 @@ export function notify(title: string, message: ReactNode | string, status: Toast
   toast({
     title,
     description: message,
-    duration: 1e4,
+    duration: 2e3,
     position: 'bottom-right',
     icon: icon ? createElement(icon, {
       size: 16

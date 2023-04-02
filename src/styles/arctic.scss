@@ -5,6 +5,10 @@
   --separator-border: var(--chakra-colors-gray-800) !important;
 }
 
+::-ms-reveal {
+  display: none;
+}
+
 * {
   -webkit-user-drag: none;
 }

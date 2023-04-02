@@ -10,11 +10,16 @@ export interface JudgeInfo {
   latency: number;
   uptime: number;
   version: string;
-  specs: Specs;
-}
-
-export interface Specs {
   os: string;
   cpu: string;
   mem: number;
+  runtimes: Array<Runtime>;
+}
+
+export interface Runtime {
+  name: string;
+  key: string;
+  command: string;
+  arguments: string;
+  version: string;
 }

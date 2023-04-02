@@ -17,12 +17,12 @@ import {transition} from 'lib/utils';
 
 const criterias = [
   {re: /^\S{6,}$/, label: 'Includes 6 characters and no whitespace'},
-  {re: /\d/, label: 'Includes number'},
-  {re: /[a-z]/, label: 'Includes lowercase letter'},
-  {re: /[A-Z]/, label: 'Includes uppercase letter'},
-  {re: /[$&+,:;=?@#|'<>.^*()%!-]/, label: 'Includes special symbol'}];
+  {re: /\d/, label: 'Includes a digit'},
+  {re: /[a-z]/, label: 'Includes a lowercase letter'},
+  {re: /[A-Z]/, label: 'Includes a uppercase letter'},
+  {re: /[$&+,:;=?@#|'<>.^*()%!-]/, label: 'Includes a special symbol'}];
 
-function Criteria({result, value}) {
+function Criteria({result}) {
   return (
     <HStack color={`${result.result ? 'arctic' : 'red'}.200`}>
       {createElement(result.result ? Check : X,
@@ -56,7 +56,7 @@ export default function PasswordBox({type = 'password', name, ...props}: TextBox
               mb={2} />
             <VStack align='stretch'>
               {results.map((c, i) => (
-                <Criteria result={c} value={value} key={i} />
+                <Criteria result={c} key={i} />
               ))}
             </VStack>
           </Box>

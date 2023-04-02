@@ -1,4 +1,4 @@
-import {CloseButton, Heading, HStack, Spacer, Spinner, Text, VStack} from '@chakra-ui/react';
+import {CloseButton, Flex, Heading, HStack, Spinner, Text, VStack} from '@chakra-ui/react';
 import {ReactNode} from 'react';
 import type {ToastStatus} from '@chakra-ui/toast/dist/toast.types';
 
@@ -18,12 +18,13 @@ function getStatusColor(status: ToastStatus): string {
 export default function Notification({title, message, icon, onClose, status}: NotificationProps) {
   return (
     <VStack shadow='xl' pr={2} pl={4} py={2} bg={getStatusColor(status)} borderRadius='xl' align='stretch'>
-      <HStack spacing={3}>
-        {status === 'loading' ? <Spinner size='xs' /> : icon}
-        <Heading size='xs' as='h6'>{title}</Heading>
-        <Spacer minW={16} />
+      <Flex gap={4} alignItems='center'>
+        <HStack spacing={2} flex={1}>
+          {status === 'loading' ? <Spinner size='xs' /> : icon}
+          <Heading size='xs' as='h6'>{title}</Heading>
+        </HStack>
         <CloseButton borderRadius='xl' onClick={onClose} />
-      </HStack>
+      </Flex>
       <Text fontSize='sm'>
         {message}
       </Text>

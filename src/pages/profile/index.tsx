@@ -60,7 +60,7 @@ export default function ProfilePage() {
       <Center>
         <HStack align='stretch' justify='center' maxW='80%' minW='60%'>
           <VStack mt={8} spacing={4}>
-            <Gravatar email='admin@xwork.space' size={160} borderWidth={2}
+            <Gravatar hash={user.avatar} size={160} borderWidth={2}
               borderColor='arctic.400' />
             <VStack spacing={0}>
               <Heading size='md' whiteSpace='nowrap'>

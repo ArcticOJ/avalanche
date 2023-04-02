@@ -84,7 +84,7 @@ export default function Problems() {
       </VStack>
       <VStack>
         <Box textAlign='center' bg='gray.800' borderRadius='2xl' py={4} px={8}>
-          <Heading size='xs'>
+          <Heading size='xs' as='h6'>
             Before contest
           </Heading>
           <Heading size='md' as={NextLink} href='/' color='arctic.400'>

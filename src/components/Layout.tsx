@@ -35,7 +35,6 @@ import {
   TrendingUp,
   User as UserIcon
 } from 'react-feather';
-import {motion} from 'framer-motion';
 import {useRouter} from 'next/router';
 import AuthModal from 'components/modals/Authenticate';
 import {useAuth} from 'lib/hooks/useAuth';
@@ -46,6 +45,7 @@ import {usei18n} from 'lib/hooks/usei18n';
 import {transition} from 'lib/utils';
 import Snowflakes from 'components/Snowflakes';
 import {usePathname} from 'next/navigation';
+import AnimatedDiv from './AnimatedDiv';
 
 interface Route {
   route: string;
@@ -86,8 +86,6 @@ const adminRoute: Route = {
   key: 'adminPanel',
   icon: Shield
 };
-
-const AnimatedDiv = chakra(motion.div);
 
 function InnerLayout({children}: PropsWithChildren) {
   const {route} = useRouter();
@@ -191,7 +189,7 @@ function UserInfo({collapsed, user, onLogOut}: { collapsed: boolean, user: User,
         borderRadius='2xl'
         px={collapsed ? 2 : 4}>
         <HStack spacing={2}>
-          <Gravatar colorScheme='arctic' email={user.email} name={user.handle} />
+          <Gravatar colorScheme='arctic' hash={user.avatar} name={user.handle} />
           <VStack spacing={0} textAlign='start' display={collapsed && 'none'}>
             <Text fontSize={15} color='white'>
               {user.handle}
@@ -206,7 +204,7 @@ function UserInfo({collapsed, user, onLogOut}: { collapsed: boolean, user: User,
         <MenuItem as={NextLink} href='/profile'
           icon={<UserIcon size={16} />}>{t('sidebar.userMenu.yourProfile')}</MenuItem>
         <MenuItem icon={<Settings size={16} />}>{t('sidebar.userMenu.userPrefs')}</MenuItem>
-        <MenuItem icon={<Image alt={currentLanguage} src={`/static/flags/${currentLanguage}.png`} boxSize={4} />}
+        <MenuItem icon={<Image alt={currentLanguage} src={`/static/flags/${currentLanguage}.svg`} boxSize={4} />}
           onClick={switchLanguage}>
           {t('sidebar.userMenu.lang', {
             lang: t(`language.${currentLanguage}`)

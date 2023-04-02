@@ -27,11 +27,12 @@ export default function useSubmit(): SubmitHandler {
     on();
     const formData = new FormData();
     formData.append('code', file);
+    formData.append('streamed', 'true');
     const r = await fetch(`/api/contests/${problem}/submit`, {
       method: 'POST',
       body: formData
     });
-    if (r.ok && r.headers.get('transfer-encoding') === 'chunked') {
+    if (r.ok) {
       const reader = r.body.pipeThrough(new TextDecoderStream()).getReader();
       while (true) {
         const {done, value} = await reader.read();
@@ -39,6 +40,7 @@ export default function useSubmit(): SubmitHandler {
           break;
         for (const d of value.split('\n').map(f => f.trim()).filter(f => f !== '')) {
           const data: JudgementStatus = JSON.parse(d);
+          console.log(data);
           if (!data) break;
           setFinalStatus(data.status);
           if (data.status !== Verdict.Pending)

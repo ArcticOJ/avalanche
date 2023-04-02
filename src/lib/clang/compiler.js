@@ -127,10 +127,10 @@ export class Compiler {
   }
 
   disposeRunner() {
-    console.log(this.runner);
-    if (!this.runner) return;
-    this.runner.terminate();
-    this.runner = null;
+    if (this.runner) {
+      this.runner.terminate();
+      this.runner = null;
+    }
     this.emit('compileEnd', Date.now());
   }
 

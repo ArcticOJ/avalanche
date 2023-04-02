@@ -5,8 +5,10 @@ function Checkmark({isIndeterminate, isChecked}: CheckboxIconProps) {
   return isChecked ? <Check /> : isIndeterminate ? <Minus /> : <></>;
 }
 
-export default function CheckBox(props: CheckboxProps) {
+export default function CheckBox({value, ...props}: CheckboxProps) {
+  console.log(value);
   return (
-    <Checkbox icon={<Checkmark />} {...props} />
+    // @ts-ignore
+    <Checkbox icon={<Checkmark />} value={value} isChecked={value} {...props} />
   );
 }

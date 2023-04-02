@@ -12,6 +12,7 @@ import {
   Flex,
   Heading,
   HStack,
+  SkeletonText,
   Spacer,
   Text,
   VStack
@@ -24,7 +25,9 @@ import dynamic from 'next/dynamic';
 
 const Markdown = dynamic(() => import('components/Markdown'), {
   suspense: true,
-  ssr: false
+  ssr: false,
+  loading: () =>
+    <SkeletonText noOfLines={6} spacing='4' skeletonHeight='2' />
 });
 
 export default function Feeds() {
@@ -42,7 +45,7 @@ export default function Feeds() {
                 <Avatar src='https://goldor.dev/static/fav.png' size='sm' />
                 <VStack alignItems='start' spacing={0}>
                   <Heading as='h6' size='xs'>
-                    {feed.author.username}
+                    {/*feed.author.username*/}
                   </Heading>
                   <Text fontSize={13}>
                     {new Date(feed.timestamp).toLocaleDateString()} &bull; 2 mins read
@@ -73,7 +76,7 @@ export default function Feeds() {
 
       <VStack pos='sticky'>
         <Box textAlign='center' bg='gray.800' borderRadius='2xl' py={4} px={8}>
-          <Heading size='xs'>
+          <Heading size='xs' as='h6'>
             Before contest
           </Heading>
           <Heading size='md' as={NextLink} href='/' color='arctic.400'>

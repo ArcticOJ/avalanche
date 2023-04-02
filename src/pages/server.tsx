@@ -70,15 +70,15 @@ export default function ServerPage() {
               },
               {
                 name: 'Memory',
-                value: `${round(judge.specs.mem, 3)} GB`
+                value: `${round(judge.mem, 3)} GB`
               },
               {
                 name: 'OS',
-                value: judge.specs.os
+                value: judge.os
               },
               {
                 name: 'CPU',
-                value: judge.specs.cpu
+                value: judge.cpu
               }
             ] : []} />
           ))}

@@ -10,6 +10,7 @@ export interface User {
   email: string;
   organization: string;
   registeredAt: Date;
+  avatar: string;
   // lastLogin: Date;
 }
 

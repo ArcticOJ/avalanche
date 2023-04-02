@@ -4,7 +4,7 @@ import useLocalStorage from 'lib/hooks/useLocalStorage';
 import {compress, decompress} from 'lzutf8';
 import {historyField} from '@codemirror/commands';
 import {EditorView, ViewUpdate} from '@codemirror/view';
-import {EditorSelection, EditorState, Text} from '@codemirror/state';
+import {EditorSelection, EditorState} from '@codemirror/state';
 import {sleep} from 'lib/utils';
 import {foldState} from '@codemirror/language';
 
@@ -34,11 +34,12 @@ export default function useCodeCache(): CacheHandler {
     if (!state || state.length === 0) {
       const template = await fetch('/static/templates/cpp').then(r => r.ok ? r.text() : '');
       const pos = template.indexOf('$END$');
-      const doc = Text.of(template.replace('$END$', '').split('\n'));
-      view.setState(Object.assign(view.state, {
-        doc
-      }));
       view.dispatch({
+        changes: {
+          from: 0,
+          to: view.state.doc.length,
+          insert: template.replace('$END$', '')
+        },
         selection: EditorSelection.create([EditorSelection.cursor(pos)])
       });
     } else {

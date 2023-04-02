@@ -47,19 +47,21 @@ export default forwardRef<TextBoxProps, 'input'>(({
   const [isPassword, {toggle}] = useBoolean(true);
   return (
     <InputGroup size='sm' flex={1}>
-      <InputLeftElement w={10}>
-        {createElement(icon, {
-          size: 16,
-          color: 'var(--chakra-colors-arctic-100)'
-        })}
-      </InputLeftElement>
+      {icon && (
+        <InputLeftElement w={10}>
+          {createElement(icon, {
+            size: 16,
+            color: 'var(--chakra-colors-arctic-100)'
+          })}
+        </InputLeftElement>
+      )}
       <Input borderRadius='xl' focusBorderColor='arctic.300'
         ref={ref}
         name={inputProps.name}
-        placeholder={placeholder} {...inputProps}
+        placeholder={placeholder}
         type={isPassword && type === 'password' ? 'password' : type === 'password' ? 'text' : type}
         isReadOnly={isReadOnly}
-        defaultValue={children}>
+        defaultValue={children}  {...inputProps}>
       </Input>
       {(description || type === 'password' || rightElement) && (
         <InputRightElement mr={1} color='arctic.100'>

@@ -77,6 +77,15 @@ export async function request<TBody = never, TResponse = any, TMonitor extends b
   }
 }
 
+export async function createOAuthRequest(provider: string, action: string, remember = false) {
+  const r = await request({
+    endpoint: `/api/oauth/${provider}?action=${action}&remember=${remember ? 'true' : 'false'}`
+  });
+  if (r.url) {
+    window.location.assign(decodeURI(r.url));
+  } else notify('Request failed', r.error);
+}
+
 export async function sleep(timeout: number) {
   return await new Promise((resolve) => setTimeout(resolve, timeout));
 }

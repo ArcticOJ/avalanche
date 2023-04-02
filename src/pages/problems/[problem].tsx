@@ -3,9 +3,11 @@ import {Allotment} from 'allotment';
 import dynamic from 'next/dynamic';
 import useQuery from 'lib/hooks/useQuery';
 import React, {useEffect} from 'react';
-import {Box, IconButton, TabPanel, TabPanels, Tabs} from '@chakra-ui/react';
+import {Code, Heading, TabPanel, TabPanels, Tabs, Text} from '@chakra-ui/react';
 import {TabItem, TabItems} from 'components/TabItem';
-import {Clipboard, Clock, FileText} from 'react-feather';
+import {Clock, FileText} from 'react-feather';
+import IOSample from 'components/IOSample';
+import Constraints from 'components/Constraints';
 
 const CodeEditor = dynamic(() => import('components/CodeEditor'), {
   suspense: true,
@@ -28,7 +30,7 @@ export default function Problem() {
           <Tabs colorScheme='arctic' size='sm'>
             <TabItems ml={2} mt={2}>
               <TabItem icon={FileText}>
-                Description
+                Statement
               </TabItem>
               <TabItem icon={Clock}>
                 Recent submissions
@@ -36,21 +38,17 @@ export default function Problem() {
             </TabItems>
             <TabPanels>
               <TabPanel>
-                <Box bg='gray.800' p={4} borderRadius='2xl' position='relative' fontWeight={600} fontSize={14}>
-                  <IconButton display='flex' aria-label='Copy to clipboard'
-                    position='absolute' right={4} top={4}>
-                    <Clipboard size={16} />
-                  </IconButton>
-                  <p>
-                    <code>
-                      6
-                    </code>
-                    <br />
-                    <code>
-                      5 7 9 6 8 10
-                    </code>
-                  </p>
-                </Box>
+                <Constraints mem='256 MB' cpu='1' time='1s' />
+                <Heading size='lg'>
+                  Hello World
+                </Heading>
+                {/* TODO: make constraints collapsible */}
+                <Text my={4}>
+                  Print <Code>Hello, World.</Code>
+                </Text>
+                <IOSample label='Output'>
+                  Hello, World.
+                </IOSample>
               </TabPanel>
             </TabPanels>
           </Tabs>
