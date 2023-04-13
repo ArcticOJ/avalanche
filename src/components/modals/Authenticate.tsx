@@ -19,7 +19,7 @@ import {FastField, Formik} from 'formik';
 import TextField from 'components/TextField';
 import {notify} from 'lib/notifications';
 import CheckBox from 'components/CheckBox';
-import {createOAuthRequest, request} from 'lib/utils';
+import {createOAuthRequest, request} from 'lib/utils/common';
 import {bool as yupBool, object as yupObject, ref as yupRef, string as yupString} from 'yup';
 import PasswordBox from 'components/PasswordBox';
 import {useAuth} from 'lib/hooks/useAuth';
@@ -40,7 +40,7 @@ function OAuthLoginButton({provider}) {
 function LoginForm() {
   const {revalidate} = useAuth();
   const {data, isLoading} = useFetch('/api/oauth', {
-    revalidateOnFocus: true,
+    revalidateOnFocus: false,
     fallbackData: {
       providers: []
     }

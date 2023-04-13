@@ -6,7 +6,7 @@ import {Segment, SegmentedControl} from 'components/SegmentedControl';
 import TextBox from 'components/TextBox';
 import useFetch from 'lib/hooks/useFetch';
 import templite from 'templite';
-import {ensureClientSide} from 'lib/utils';
+import {ensureClientSide} from 'lib/utils/common';
 import useDebouncedValue from 'lib/hooks/useDebouncedValue';
 import {useState} from 'react';
 
@@ -35,6 +35,7 @@ function SubmitFromCLI() {
     }
   });
   const [path, setPath] = useState('');
+  // TODO: useDeferredValue
   const {debouncedValue} = useDebouncedValue(path, 100);
   return (
     <Box>

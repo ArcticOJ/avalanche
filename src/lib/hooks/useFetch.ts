@@ -1,7 +1,7 @@
 import useSWR, {BareFetcher, SWRResponse} from 'swr';
 import type {RestError} from 'lib/types/common';
 import type {PublicConfiguration} from 'swr/_internal';
-import {ensureClientSide} from 'lib/utils';
+import {ensureClientSide} from 'lib/utils/common';
 
 type Err = RestError | Error;
 type Options<T> = Partial<PublicConfiguration<T, Err, BareFetcher<T>>>;

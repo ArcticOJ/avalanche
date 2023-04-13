@@ -9,7 +9,7 @@ interface SectionProps extends BoxProps {
 
 export default function Section({title, icon, children, ...props}: SectionProps) {
   return (
-    <Box borderWidth={2} borderRadius='xl' borderColor='gray.800'>
+    <Box borderWidth={2} borderRadius='2xl' borderColor='gray.800'>
       <HStack px={4} py={2} spacing={2}>
         {icon && createElement(icon, {
           size: 16

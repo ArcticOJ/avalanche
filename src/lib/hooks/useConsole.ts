@@ -1,7 +1,7 @@
-import {MutableRefObject, useCallback, useEffect, useRef} from 'react';
+import {MutableRefObject, useEffect, useRef} from 'react';
 import type {Terminal} from 'xterm';
 import type {FitAddon} from 'xterm-addon-fit';
-import throttle from 'lodash.throttle';
+import useThrottle from 'lib/hooks/useThrottle';
 
 interface ConsoleHandler {
   inputRef: MutableRefObject<HTMLTextAreaElement>;
@@ -22,14 +22,10 @@ export default function useConsole(ready: boolean): ConsoleHandler {
     termRef = useRef<Terminal>(),
     fitRef = useRef<FitAddon>(),
     outRef = useRef<HTMLDivElement>();
-  const triggerFit = useCallback(
-    throttle(() => {
+  const triggerFit = useThrottle(
+    () => {
       if (fitRef.current) fitRef.current.fit();
-    }, 1e3, {
-      trailing: true
-    }),
-    []
-  );
+    }, 1e3);
   useEffect(() => {
     if (ready) {
       (async () => {

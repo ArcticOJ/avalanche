@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useRouter} from 'next/router';
-import {request} from 'lib/utils';
+import {request} from 'lib/utils/common';
 import {Avatar, Center, Heading, Spinner, Text, VStack} from '@chakra-ui/react';
 import {useAuth} from 'lib/hooks/useAuth';
 

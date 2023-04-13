@@ -8,6 +8,7 @@ interface GravatarProps extends Omit<AvatarProps, 'size'> {
 export default function Gravatar({hash, size = 32, ...props}: GravatarProps) {
   return (
     <Avatar boxSize={`${size}px`}
-      src={`https://www.gravatar.com/avatar/${hash}?s=${size}&d=retro`} {...props} />
+      src={`https://www.gravatar.com/avatar/${hash}?s=${size}&d=retro`} {...props}
+      crossOrigin='anonymous' referrerPolicy='same-origin' />
   );
 }

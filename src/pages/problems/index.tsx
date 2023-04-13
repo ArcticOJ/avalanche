@@ -22,7 +22,7 @@ import {Problem} from 'lib/types/contests';
 import React from 'react';
 import {useRouter} from 'next/router';
 import TextBox from 'components/TextBox';
-import {transition} from 'lib/utils';
+import {transition} from 'lib/utils/common';
 
 export default function Problems() {
   const {push} = useRouter();

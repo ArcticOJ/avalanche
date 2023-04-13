@@ -1,4 +1,6 @@
-/* ALLOTMENT */
+// TODO: split styles into respective modules
+
+// ALLOTMENT
 
 :root {
   --focus-border: var(--chakra-colors-arctic-400, lightblue) !important;
@@ -13,7 +15,7 @@
   -webkit-user-drag: none;
 }
 
-/* CODEMIRROR */
+// CODEMIRROR
 
 .cm-editor {
   height: 100%;
@@ -101,8 +103,29 @@
   font-size: 16px;
 }
 
-/* HEATMAP */
+// HEATMAP
 
-svg.w-heatmap > text {
-  color: white;
+svg.arctic-heatmap {
+  text {
+    fill: var(--chakra-colors-gray-300);
+    font-size: 10px;
+    text-anchor: middle;
+
+  }
+
+  rect {
+    transition: fill .1s ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+      fill: var(--chakra-colors-gray-500);
+      stroke-width: 1px;
+    }
+
+    &:active {
+      fill: var(--chakra-colors-arctic-700);
+      stroke-width: 0;
+    }
+  }
 }
+

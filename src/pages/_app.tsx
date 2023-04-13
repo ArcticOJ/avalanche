@@ -9,7 +9,7 @@ import '@fontsource/montserrat/700.css';
 import theme from 'lib/themes/app';
 import {AuthProvider} from 'lib/hooks/useAuth';
 import {TranslationProvider, usei18n} from 'lib/hooks/usei18n';
-import {ensureClientSide} from 'lib/utils';
+import {ensureClientSide} from 'lib/utils/common';
 import dynamic from 'next/dynamic';
 
 const Layout = dynamic(() => import('components/Layout'));

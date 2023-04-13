@@ -1,6 +1,5 @@
-import {useCallback} from 'react';
-import throttle from 'lodash.throttle';
 import copy from 'copy-to-clipboard';
+import useThrottle from 'lib/hooks/useThrottle';
 
 interface ClippyHandler {
   copy(v: string): void;
@@ -9,11 +8,9 @@ interface ClippyHandler {
 }
 
 export default function useClippy(): ClippyHandler {
-  const setValue = useCallback(throttle((s: string) => {
+  const setValue = useThrottle((s: string) => {
     copy(s);
-  }, 1e3, {
-    leading: true
-  }), []);
+  }, 5e2);
   return {
     copy(v: string) {
       setValue(v);

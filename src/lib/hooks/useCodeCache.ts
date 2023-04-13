@@ -1,12 +1,12 @@
 import {useCallback} from 'react';
-import throttle from 'lodash.throttle';
 import useLocalStorage from 'lib/hooks/useLocalStorage';
 import {compress, decompress} from 'lzutf8';
 import {historyField} from '@codemirror/commands';
 import {EditorView, ViewUpdate} from '@codemirror/view';
 import {EditorSelection, EditorState} from '@codemirror/state';
-import {sleep} from 'lib/utils';
+import {sleep} from 'lib/utils/common';
 import {foldState} from '@codemirror/language';
+import useThrottle from 'lib/hooks/useThrottle';
 
 interface CacheHandler {
   save(doc: string, update: ViewUpdate): void;
@@ -20,10 +20,10 @@ export default function useCodeCache(): CacheHandler {
   // TODO: per-problem code cache, using indexeddb
 
   const {set, get} = useLocalStorage('arctic:code', '', false);
-  const save = useCallback(throttle((_, update: ViewUpdate) =>
+  const save = useThrottle((_, update: ViewUpdate) =>
     set(compress(JSON.stringify(update.state.toJSON(fields)), {
       outputEncoding: 'Base64'
-    })), 2e3), []);
+    })), 2e3);
   const init = useCallback(async (view: EditorView) => {
     view.focus();
     view.dom.focus();

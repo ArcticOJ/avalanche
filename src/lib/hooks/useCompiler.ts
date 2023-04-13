@@ -1,7 +1,7 @@
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {WorkerMessage} from 'lib/types/common';
 import {useBoolean} from '@chakra-ui/react';
-import throttle from 'lodash.throttle';
+import useThrottle from 'lib/hooks/useThrottle';
 
 interface CompilerParameters {
   content(): string;
@@ -29,12 +29,12 @@ export default function useCompiler({stdin, stdout, content}: CompilerParameters
   const [ready, setReady] = useState(false);
   const [enabled, setEnabled] = useState(false);
   const [running, {on, off}] = useBoolean();
-  const enable = useCallback(throttle(() => {
+  const enable = useThrottle(() => {
     setEnabled(true);
     worker.current.postMessage({
       type: 'init'
     });
-  }, 2000), []);
+  }, 2e3);
   const onMessage = (e: MessageEvent<WorkerMessage>) => {
     switch (e.data.event) {
     case 'ready':

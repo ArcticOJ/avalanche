@@ -8,6 +8,6 @@ export default defineStyleConfig({
     px: 4,
     fontWeight: 600,
     bg: 'gray.700',
-    color: 'white'
+    color: 'gray.50'
   }
 });

@@ -13,7 +13,7 @@ import {
 import React, {createElement} from 'react';
 import {motion} from 'framer-motion';
 import {TabIconProps} from './TabIcon';
-import {transition} from 'lib/utils';
+import {transition} from 'lib/utils/common';
 
 export const TabItems = forwardRef(({
   children, ...props

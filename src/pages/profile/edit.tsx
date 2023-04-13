@@ -3,7 +3,7 @@ import {Clipboard, Key, Link, RefreshCw, X} from 'react-feather';
 import TextBox from 'components/TextBox';
 import {notify} from 'lib/notifications';
 import useFetch from 'lib/hooks/useFetch';
-import {createOAuthRequest, request} from 'lib/utils';
+import {createOAuthRequest, request} from 'lib/utils/common';
 import copy from 'copy-to-clipboard';
 import React, {createElement} from 'react';
 import {resolveName} from 'lib/oauth/resolver';
@@ -20,13 +20,13 @@ function OAuthConnection({provider, info, revalidate}) {
   };
   const onLink = () => createOAuthRequest(provider, 'link');
   return (
-    <Flex h={16} bg='gray.800' borderRadius='xl' borderWidth={2} borderColor={isLinked ? 'green.300' : 'arctic.300'}
+    <Flex h={16} bg='gray.800' borderRadius='2xl' borderWidth={2} borderColor={isLinked ? 'green.300' : 'arctic.300'}
       alignItems='center' px={4} gap={4}>
       <Image src={`/static/logos/${provider}.svg`} filter='invert(1)' boxSize={8} alt={name} />
       <VStack spacing={0} flex={1} align='left'>
         <Heading as='h6' size='xs'>{name}</Heading>
         {isLinked && (
-          <Text fontSize={11}>
+          <Text color='gray.300' fontSize={11}>
             {info.username}
           </Text>
         )}
@@ -101,7 +101,7 @@ export default function ProfileEdit() {
           </Button>
         </ButtonGroup>
       </Flex>
-      <SimpleGrid gap={2} columns={5}>
+      <SimpleGrid gap={2} minChildWidth={64}>
         {oauthData.providers.map(provider => (
           <OAuthConnection provider={provider} key={provider}
             info={Object.hasOwn(oauthData.connections, provider) && oauthData.connections[provider]}

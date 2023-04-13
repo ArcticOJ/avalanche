@@ -1,4 +1,4 @@
-import {request} from 'lib/utils';
+import {request} from 'lib/utils/common';
 import {useEffect, useState} from 'react';
 
 interface RequestHandler<T> {

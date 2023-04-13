@@ -1,6 +1,6 @@
 import {menuAnatomy} from '@chakra-ui/anatomy';
 import {createMultiStyleConfigHelpers} from '@chakra-ui/react';
-import {transition} from 'lib/utils';
+import {transition} from 'lib/utils/common';
 
 const {definePartsStyle, defineMultiStyleConfig} =
   createMultiStyleConfigHelpers(menuAnatomy.keys);

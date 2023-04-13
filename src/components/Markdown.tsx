@@ -1,7 +1,6 @@
 import ReactMarkdown, {Components} from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
-import type {CSSProperties} from 'react';
 import {useEffect, useState} from 'react';
 import NextLink from 'next/link';
 import 'katex/dist/katex.min.css';
@@ -10,6 +9,7 @@ import {
   Box,
   Button,
   chakra,
+  ChakraProps,
   Code,
   Divider,
   Heading,
@@ -30,8 +30,7 @@ import {Check, Copy} from 'react-feather';
 import CheckBox from 'components/CheckBox';
 import Prism from 'components/Prism';
 
-export interface MarkdownProps {
-  style?: CSSProperties;
+export interface MarkdownProps extends ChakraProps {
   url: string;
 }
 
@@ -88,7 +87,7 @@ const componentRenderers: Components = {
   code: ({children, inline, className}) => {
     if (inline)
       return (
-        <Code fontFamily='"Inconsolata", monospace' fontSize={13} borderRadius='md' bg='gray.800'>
+        <Code fontFamily='"Inconsolata", monospace' fontSize='85%' borderRadius='md' bg='gray.800'>
           {children}
         </Code>
       );
@@ -96,7 +95,6 @@ const componentRenderers: Components = {
     const language = (/language-(\w+)/.exec(className || 'unknown') || []).at(1);
     const {setValue, onCopy, hasCopied} = useClipboard('');
     return (
-
       <Box>
         <HStack bg='gray.800' borderTopRadius='lg' pl={4} pr={2} py={1} fontFamily='body'>
           <Text fontSize={14} fontWeight={700}>
@@ -113,6 +111,7 @@ const componentRenderers: Components = {
         </HStack>
         <Divider />
         <Prism code={content} language={language} containerStyle={{
+          fontSize: '75%',
           padding: 8
         }} />
       </Box>
@@ -127,7 +126,7 @@ const componentRenderers: Components = {
 
 const ChakraMarkdown = chakra(ReactMarkdown);
 
-export default function Markdown({style = {}, url}: MarkdownProps) {
+export default function Markdown({url, ...props}: MarkdownProps) {
   if (url.length == 0) return <></>;
   const [content, setContent] = useState('');
   useEffect(() => {
@@ -136,7 +135,7 @@ export default function Markdown({style = {}, url}: MarkdownProps) {
   return (
     <ChakraMarkdown display='flex' flexDirection='column' gap={4} remarkPlugins={[remarkGfm, remarkMath]}
       rehypePlugins={[rehypeKatex]}
-      components={componentRenderers} p={4} sx={style}>
+      components={componentRenderers} p={4} {...props}>
       {content}
     </ChakraMarkdown>
   );

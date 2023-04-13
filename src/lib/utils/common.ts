@@ -15,7 +15,7 @@ interface FetchParameters<TBody, TMonitor> {
 }
 
 export function classes(...classNames: string[]): string {
-  return classNames.join(' ');
+  return classNames.filter(Boolean).join(' ');
 }
 
 export function transition(dura = 0.2, scope = 'all'): string {

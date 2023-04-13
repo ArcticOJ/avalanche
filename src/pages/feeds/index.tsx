@@ -20,7 +20,7 @@ import {
 import {ExternalLink, MessageSquare, Share2} from 'react-feather';
 import NextLink from 'next/link';
 import React from 'react';
-import {transition} from 'lib/utils';
+import {transition} from 'lib/utils/common';
 import dynamic from 'next/dynamic';
 
 const Markdown = dynamic(() => import('components/Markdown'), {

@@ -1,9 +1,9 @@
-import {ReactElement, useCallback, useState} from 'react';
+import {ReactElement, useState} from 'react';
 import {Verdict} from 'lib/types/submissions';
-import throttle from 'lodash.throttle';
 import useQuery from 'lib/hooks/useQuery';
 import {useBoolean, useDisclosure} from '@chakra-ui/react';
 import SubmitModal from 'components/modals/Submit';
+import useThrottle from 'lib/hooks/useThrottle';
 
 interface JudgementStatus {
   status: Verdict;
@@ -23,7 +23,7 @@ export default function useSubmit(): SubmitHandler {
   const problem = useQuery('problem');
   const {isOpen, onOpen, onClose} = useDisclosure();
   const [busy, {off, on}] = useBoolean();
-  const onSubmit = useCallback(throttle(async (file: File) => {
+  const onSubmit = useThrottle(async (file: File) => {
     on();
     const formData = new FormData();
     formData.append('code', file);
@@ -51,8 +51,7 @@ export default function useSubmit(): SubmitHandler {
     } else
       off();
     setTimeout(() => setFinalStatus(Verdict.None), 2e3);
-  }, 2e3),
-  []);
+  }, 2e3);
   return {
     submitModal: (
       <SubmitModal isOpen={isOpen} onClose={onClose} callback={onSubmit} isBusy={busy} />

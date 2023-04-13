@@ -48,7 +48,7 @@ import type {EditorView} from '@codemirror/view';
 import useSubmit from 'lib/hooks/useSubmit';
 import {Verdict} from 'lib/types/submissions';
 import {TabItem, TabItems} from 'components/TabItem';
-import {transition} from 'lib/utils';
+import {transition} from 'lib/utils/common';
 import SearchPanel from 'components/SearchPanel';
 import useCodeCache from 'lib/hooks/useCodeCache';
 

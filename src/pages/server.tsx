@@ -1,6 +1,6 @@
-import {Box, Button, Divider, Heading, HStack, Spacer, Text, VStack, Wrap} from '@chakra-ui/react';
+import {Box, Divider, Heading, HStack, Text, VStack, Wrap} from '@chakra-ui/react';
 import type {Health} from 'lib/types/health';
-import {round, transition} from 'lib/utils';
+import {round, transition} from 'lib/utils/common';
 import useRequest from 'lib/hooks/useRequest';
 import {Server} from 'react-feather';
 
@@ -13,25 +13,22 @@ function Item({lines, header, isCluster = false}) {
         bg: 'gray.600'
       }} position='relative'>
       <Heading size='sm' textAlign='center'>{header}</Heading>
+      <Divider my={2} />
       <HStack my={isCluster && 2}>
-        <Box alignSelf='center'>
+        <Box alignSelf='center' mr={4}>
           <Server />
         </Box>
-        <Spacer />
-        {isCluster && (
-          <Button>
-            View runtimes
-          </Button>
-        )}
+        <div>
+          {lines.map((l, i) => (
+            <Text key={i} fontSize='sm'>
+              <Text as='b'>{l.name}: </Text>
+              <Text as='span'>
+                {l.value}
+              </Text>
+            </Text>
+          ))}
+        </div>
       </HStack>
-      {lines.map((l, i) => (
-        <Text key={i} fontSize='sm'>
-          <Text as='b'>{l.name}: </Text>
-          <Text as='span'>
-            {l.value}
-          </Text>
-        </Text>
-      ))}
     </Box>
   );
 }

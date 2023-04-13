@@ -1,7 +1,7 @@
 import Highlight, {defaultProps, Language} from 'prism-react-renderer';
 import theme from 'prism-react-renderer/themes/vsDark';
 import {CSSProperties, useEffect, useState} from 'react';
-import {classes} from 'lib/utils';
+import {classes} from 'lib/utils/common';
 import prism from 'styles/Prism.module.scss';
 
 interface PrismProps {

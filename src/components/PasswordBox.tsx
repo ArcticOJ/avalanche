@@ -13,7 +13,7 @@ import {Check, X} from 'react-feather';
 import TextBox, {TextBoxProps} from 'components/TextBox';
 import {FastField, useField} from 'formik';
 import {createElement, useMemo} from 'react';
-import {transition} from 'lib/utils';
+import {transition} from 'lib/utils/common';
 
 const criterias = [
   {re: /^\S{6,}$/, label: 'Includes 6 characters and no whitespace'},
@@ -52,8 +52,13 @@ export default function PasswordBox({type = 'password', name, ...props}: TextBox
           <FastField as={TextBox} type={type} autoComplete='new-password'
             name={name} onFocusCapture={on} onBlurCapture={off} {...props} />
           <Box bg='gray.700' px={4} pt={4} pb={2} borderRadius='xl'>
-            <Progress transition={transition()} value={progress} colorScheme='arctic' borderRadius='xl' size='xs'
-              mb={2} />
+            <Progress sx={{
+              '&>div[role="progressbar"]': {
+                transition: transition()
+              }
+            }} value={progress} colorScheme='arctic' borderRadius='xl'
+            size='xs'
+            mb={2} />
             <VStack align='stretch'>
               {results.map((c, i) => (
                 <Criteria result={c} key={i} />

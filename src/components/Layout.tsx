@@ -42,10 +42,11 @@ import {User} from 'lib/types/users';
 import NextLink from 'next/link';
 import Gravatar from 'components/Gravatar';
 import {usei18n} from 'lib/hooks/usei18n';
-import {transition} from 'lib/utils';
+import {transition} from 'lib/utils/common';
 import Snowflakes from 'components/Snowflakes';
 import {usePathname} from 'next/navigation';
-import AnimatedDiv from './AnimatedDiv';
+import Preferences from 'components/modals/Preferences';
+import {motion} from 'framer-motion';
 
 interface Route {
   route: string;
@@ -53,39 +54,41 @@ interface Route {
   icon: Icon;
 }
 
-const routes: Route[] = [
-  {
-    icon: Feather,
-    key: 'feeds',
-    route: '/feeds'
+const
+  routes: Route[] = [
+    {
+      icon: Feather,
+      key: 'feeds',
+      route: '/feeds'
+    },
+    {
+      icon: TrendingUp,
+      key: 'leaderboard',
+      route: '/leaderboard'
+    },
+    {
+      icon: Award,
+      key: 'contests',
+      route: '/contests'
+    },
+    {
+      icon: Edit3,
+      key: 'problems',
+      route: '/problems'
+    },
+    {
+      icon: Send,
+      key: 'submissions',
+      route: '/submissions'
+    }
+  ],
+  adminRoute: Route = {
+    route: '/admin',
+    key: 'adminPanel',
+    icon: Shield
   },
-  {
-    icon: TrendingUp,
-    key: 'leaderboard',
-    route: '/leaderboard'
-  },
-  {
-    icon: Award,
-    key: 'contests',
-    route: '/contests'
-  },
-  {
-    icon: Edit3,
-    key: 'problems',
-    route: '/problems'
-  },
-  {
-    icon: Send,
-    key: 'submissions',
-    route: '/submissions'
-  }
-];
-
-const adminRoute: Route = {
-  route: '/admin',
-  key: 'adminPanel',
-  icon: Shield
-};
+  AnimatedAside = chakra(motion.aside),
+  AnimatedDiv = chakra(motion.div);
 
 function InnerLayout({children}: PropsWithChildren) {
   const {route} = useRouter();
@@ -135,7 +138,7 @@ export function NavigationItem({
         fg: 'black'
       };
     return {
-      fg: 'white'
+      fg: 'gray.50'
     };
   }, [isCurrent]);
   return (
@@ -191,7 +194,7 @@ function UserInfo({collapsed, user, onLogOut}: { collapsed: boolean, user: User,
         <HStack spacing={2}>
           <Gravatar colorScheme='arctic' hash={user.avatar} name={user.handle} />
           <VStack spacing={0} textAlign='start' display={collapsed && 'none'}>
-            <Text fontSize={15} color='white'>
+            <Text fontSize={15} color='gray.50'>
               {user.handle}
             </Text>
             <Text fontSize={10}>
@@ -311,10 +314,11 @@ function Sidebar() {
 
 export default function Layout({children}) {
   return (
-    <Flex w='100vw' h='100vh' bg='gray.800'>
+    <Flex w='100%' h='100vh' bg='gray.800'>
+      <Preferences />
       <Sidebar />
       <InnerLayout>
-        <Box m={0} bg='gray.900' borderTopLeftRadius='2xl' flex={1} h='100%'>
+        <Box m={0} bg='gray.900' borderTopLeftRadius='2xl' flex={1} h='100%' overflow='auto' as='main'>
           <Suspense>
             {children}
           </Suspense>

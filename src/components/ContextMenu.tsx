@@ -1,7 +1,7 @@
 import type {Icon} from 'react-feather';
 import {createElement, useEffect, useRef, useState} from 'react';
 import {HStack, Kbd, Menu, MenuDivider, MenuItem, MenuList} from '@chakra-ui/react';
-import {ensureClientSide} from 'lib/utils';
+import {ensureClientSide} from 'lib/utils/common';
 
 interface ContextMenuProps {
   isOpen: boolean;

@@ -6,6 +6,7 @@ import checkboxTheme from 'lib/themes/components/checkbox';
 import buttonTheme from 'lib/themes/components/button';
 import tooltipTheme from 'lib/themes/components/tooltip';
 import numberInputTheme from 'lib/themes/components/numberInput';
+import switchTheme from 'lib/themes/components/switch';
 
 export default extendTheme({
   fonts: {
@@ -19,7 +20,8 @@ export default extendTheme({
     NumberInput: numberInputTheme,
     Checkbox: checkboxTheme,
     Button: buttonTheme,
-    Tooltip: tooltipTheme
+    Tooltip: tooltipTheme,
+    Switch: switchTheme
   },
   styles: {
     global: {

@@ -1,8 +1,10 @@
-import {Box, Flex, Heading, VStack} from '@chakra-ui/react';
+import {Box, chakra, Flex, Heading, VStack} from '@chakra-ui/react';
 import {Children, createElement, PropsWithChildren, ReactElement, ReactNode, useState} from 'react';
 import {Icon} from 'react-feather';
-import AnimatedDiv from 'components/AnimatedDiv';
-import {transition} from 'lib/utils';
+import {transition} from 'lib/utils/common';
+import {motion} from 'framer-motion';
+
+const AnimatedDiv = chakra(motion.div);
 
 export interface SegmentProps {
   icon: Icon;
