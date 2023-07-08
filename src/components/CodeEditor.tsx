@@ -1,20 +1,21 @@
 import ReactCodeMirror, {ReactCodeMirrorRef} from '@uiw/react-codemirror';
 import vscodeDark from 'lib/themes/editor';
-import '@fontsource/inconsolata/500.css';
 import 'xterm/css/xterm.css';
 import {Allotment} from 'allotment';
+import styles from 'styles/CodeEditor.module.scss';
 import {
-  CheckCircle,
-  Clipboard,
-  Code as CodeIcon,
-  Copy,
-  Download,
-  FileText,
   Icon,
-  Play,
-  Scissors,
-  Send
-} from 'react-feather';
+  IconClipboard,
+  IconCode,
+  IconColumns2,
+  IconCopy,
+  IconCut,
+  IconDownload,
+  IconFileText,
+  IconPlayerPlay,
+  IconSend,
+  IconSpace
+} from '@tabler/icons-react';
 import {
   Button,
   ButtonGroup,
@@ -35,22 +36,34 @@ import {
   TabPanels,
   Tabs,
   Text,
+  useConst,
   VStack
 } from '@chakra-ui/react';
 import useCompiler from 'lib/hooks/useCompiler';
 import useConsole from 'lib/hooks/useConsole';
-import React, {createElement, PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {editorLanguages, languageDefinitions, languages} from 'lib/constants';
+import React, {
+  createElement,
+  PropsWithChildren,
+  startTransition,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
+import {languages, languageTypes} from 'lib/constants/languages';
 import {Compartment} from '@codemirror/state';
 import useClippy from 'lib/hooks/useClippy';
 import useContextMenu from 'lib/hooks/useContextMenu';
 import type {EditorView} from '@codemirror/view';
+import {keymap} from '@codemirror/view';
 import useSubmit from 'lib/hooks/useSubmit';
 import {Verdict} from 'lib/types/submissions';
 import {TabItem, TabItems} from 'components/TabItem';
 import {transition} from 'lib/utils/common';
 import SearchPanel from 'components/SearchPanel';
 import useCodeCache from 'lib/hooks/useCodeCache';
+import {vscodeKeymap} from '@replit/codemirror-vscode-keymap';
+import arcticKeymap from 'lib/extensions/codemirror/keymap';
 
 interface MenuBarAction {
   icon: Icon;
@@ -100,8 +113,8 @@ const StatusBarItem = forwardRef<PropsWithChildren<MenuBarAction>, 'button'>(({
       _active={{
         bg: bg.active
       }}
-      transition={transition(0.15)} {...props}>
-      {createElement(icon, {
+      {...transition(.15, ['background'])} {...props}>
+      {icon && createElement(icon, {
         size: 16
       })}
       <Text lineHeight={0}>
@@ -120,10 +133,14 @@ function handleOnSave(e) {
 }
 
 export default function CodeEditor() {
-  const languageConf = useMemo(() => new Compartment(), []);
-  const editorRef = useRef<ReactCodeMirrorRef>();
-  const searchPanelRef = useRef<HTMLElement>();
-  // TODO: make searchPanel, contextMenu and autoSave extensions.
+  const languageConf = useConst(() => new Compartment());
+  const editorRef = useRef<ReactCodeMirrorRef | undefined>(null);
+  const [editorStats, setEditorStats] = useState({
+    tabSize: 0,
+    ln: 0,
+    col: 0
+  });
+  const [searchOpened, setSearchOpened] = useState(false);
   const [tab, setTab] = useState(1);
   const [language, setLanguage] = useState('gnu++11');
   const {copy, value} = useClippy();
@@ -135,14 +152,14 @@ export default function CodeEditor() {
   const {menu, bind} = useContextMenu([
     {
       label: 'Open file',
-      icon: FileText,
+      icon: IconFileText,
       command: ['Ctrl', 'O'],
       async action() {
       }
     },
     {
       label: 'Save file',
-      icon: Download,
+      icon: IconDownload,
       command: ['Ctrl', 'S'],
       action() {
       }
@@ -152,27 +169,29 @@ export default function CodeEditor() {
     },
     {
       label: 'Copy',
-      icon: Copy,
+      icon: IconCopy,
       command: ['Ctrl', 'C'],
       action() {
-        const state = editorRef.current.view.state;
-        copy(state.sliceDoc(state.selection.main.from, state.selection.main.to));
+        const state = editorRef?.current?.view?.state;
+        const doc = state?.sliceDoc(state?.selection.main.from, state?.selection.main.to);
+        if (doc)
+          copy(doc);
       }
     },
     {
       label: 'Cut',
-      icon: Scissors,
+      icon: IconCut,
       command: ['Ctrl', 'X'],
       action() {
       }
     },
     {
       label: 'Paste',
-      icon: Clipboard,
+      icon: IconClipboard,
       command: ['Ctrl', 'V'],
       async action() {
-        const view = editorRef.current.view;
-        view.dispatch(view.state.replaceSelection(await value()));
+        const view = editorRef?.current?.view;
+        view?.dispatch(view?.state.replaceSelection(await value()));
       }
     },
     {
@@ -180,7 +199,7 @@ export default function CodeEditor() {
     },
     {
       label: 'Run',
-      icon: Play,
+      icon: IconPlayerPlay,
       command: ['Ctrl', 'E'],
       action() {
         setTab(1);
@@ -194,7 +213,7 @@ export default function CodeEditor() {
       return read();
     },
     content(): string {
-      return editorRef.current.view.state.sliceDoc();
+      return editorRef?.current?.view?.state.sliceDoc() || '';
     },
     stdout(s) {
       write(s);
@@ -208,56 +227,86 @@ export default function CodeEditor() {
     // TODO: create templates.json for all templates
     bind(view.dom);
   }, []);
+  const languageType = useRef<typeof languageTypes[keyof typeof languageTypes]>(languageTypes['cpp']);
+  useEffect(() => {
+    if (!editorRef.current?.view) return;
+    const lang = languages[language];
+    if (lang)
+      editorRef.current.view.dispatch({
+        effects: languageConf.reconfigure(languageTypes[lang.type].ext())
+      });
+  }, [language]);
   return (
     <>
       {submitModal}
       <Allotment vertical onChange={triggerFit}>
         <Allotment.Pane minSize={300}>
           <Flex direction='column' h='100%'>
-            <ChakraEditor position='relative' onChange={save} flex={1} h='100%'
-              extensions={[
-                // TODO: override search panel
-                languageConf.of(languageDefinitions['cpp']())
-              ]}
-              basicSetup={{
-                bracketMatching: true,
-                foldGutter: true,
-                autocompletion: true,
-                completionKeymap: true,
-                searchKeymap: false,
-                tabSize: 2
-              }}
-              placeholder='Write some code and press Run to compile.'
-              overflow='auto' ref={editorRef}
-              theme={vscodeDark}
-              onCreateEditor={onLoad}>
-              <SearchPanel editorRef={editorRef} />
+            <ChakraEditor onStatistics={v => startTransition(() => setEditorStats({
+              tabSize: v.tabSize,
+              ln: v.line.number,
+              col: v.selectionAsSingle.from - v.line.from
+            }))} className={styles.editor} position='relative'
+            onChange={save} flex={1} h='100%'
+            extensions={[
+              // TODO: override search panel
+              arcticKeymap(() => {
+                console.log('triggered');
+                setSearchOpened(true);
+              }),
+              keymap.of(vscodeKeymap),
+              languageConf.of(languageType.current.ext())
+            ]}
+            basicSetup={{
+              bracketMatching: true,
+              foldGutter: true,
+              autocompletion: true,
+              completionKeymap: true,
+              searchKeymap: false,
+              tabSize: 2
+            }}
+            placeholder='Write some code and press Run to compile.'
+            overflow='auto' ref={editorRef}
+            theme={vscodeDark}
+            onCreateEditor={onLoad}>
+              <SearchPanel isOpen={searchOpened} onClose={() => setSearchOpened(false)} editorRef={editorRef} />
               {menu}
             </ChakraEditor>
             <Flex bg='gray.800' minH='24px' h='24px' maxH='24px'>
-              {/* TODO: Make this working */}
-              <StatusBarItem bg={statusColor('arctic')} icon={CheckCircle}>
-                Successfully compiled
+              <StatusBarItem icon={IconCode} bg={{
+                normal: 'arctic.600',
+                active: 'arctic.500',
+                hover: 'arctic.400'
+              }}>
+                Local compiler
               </StatusBarItem>
               <Spacer />
+              <StatusBarItem icon={IconSpace}>
+                {editorStats.tabSize} spaces
+              </StatusBarItem>
+              <StatusBarItem icon={IconColumns2}>
+                Ln {editorStats.ln}, Col {editorStats.col}
+              </StatusBarItem>
               <Menu>
-                <MenuButton as={StatusBarItem} icon={CodeIcon}>
-                  {languages[language]}
+                {/* TODO: optimize this */}
+                <MenuButton as={StatusBarItem} icon={languageTypes[languages[language].type].icon}>
+                  {languages[language].name}
                 </MenuButton>
                 <Portal>
                   <MenuList>
                     <MenuOptionGroup type='radio' value={language}
-                      onChange={(value: string) => {
-                        const lang = Object.entries(editorLanguages).find(([_, l]) => l.includes(value)).shift();
-                        if (typeof lang === 'string')
-                          editorRef.current.view.dispatch({
-                            effects: languageConf.reconfigure(languageDefinitions[lang]())
-                          });
-                        setLanguage(value);
-                      }}>
-                      {Object.entries(languages).map(([id, label]) => <MenuItemOption value={id} key={id}>
-                        {label}
-                      </MenuItemOption>)}
+                      onChange={(value: string) => setLanguage(value)}>
+                      {Object.entries(languages).map(([id, lang]) => (
+                        <MenuItemOption value={id} key={id}>
+                          <Flex align='center'>
+                            {lang.name}
+                            <Spacer />
+                            {createElement(languageTypes[lang.type].icon, {
+                              size: 16
+                            })}
+                          </Flex>
+                        </MenuItemOption>
+                      ))}
                     </MenuOptionGroup>
                   </MenuList>
                 </Portal>
@@ -276,7 +325,7 @@ export default function CodeEditor() {
               </TabItem>
               <Spacer />
               <ButtonGroup isAttached size='xs' px={1} alignSelf='center'>
-                <Button leftIcon={<Play size={12} />} variant='outline' borderRadius='lg'
+                <Button leftIcon={<IconPlayerPlay size={12} />} variant='outline'
                   isDisabled={!enabled}
                   loadingText='Initializing'
                   isLoading={!ready && enabled}
@@ -291,8 +340,8 @@ export default function CodeEditor() {
                   }}>
                   {enabled ? (running ? 'Stop' : 'Run') : 'Unavailable'}
                 </Button>
-                <Button rightIcon={<Send size={12} />} isLoading={status !== Verdict.None}
-                  loadingText={Verdict[status]} borderRadius='lg'
+                <Button rightIcon={<IconSend size={12} />} isLoading={status !== Verdict.None}
+                  loadingText={Verdict[status]}
                   onClick={async () => {
                     await submit();
                   }}>
@@ -342,7 +391,7 @@ export default function CodeEditor() {
                   _active={{
                     bg: 'gray.700'
                   }}
-                  transition={transition(0.1)}
+                  transition={transition(0.1, ['background'])}
                   fontWeight={600}
                   fontSize={14}
                   overflow='auto' />

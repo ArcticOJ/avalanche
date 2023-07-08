@@ -11,11 +11,11 @@ interface StorageHandler {
 export default function useLocalStorage(key: string, defaultValue?: string, observe = true): StorageHandler {
   const [value, setValue] = useState<string>(null);
   const onStorageChange = (e: StorageEvent) => {
-    if (e.key == key)
+    if (e.key === key)
       setValue(e.newValue);
   };
   useEffect(() => {
-    setValue(localStorage.getItem(key) || defaultValue);
+    setValue(localStorage.getItem(key));
     if (observe) {
       window.addEventListener('storage', onStorageChange);
       return () => window.removeEventListener('storage', onStorageChange);
@@ -25,7 +25,7 @@ export default function useLocalStorage(key: string, defaultValue?: string, obse
     get() {
       return localStorage.getItem(key) || defaultValue;
     },
-    value,
+    value: value || defaultValue || '',
     set(value) {
       localStorage.setItem(key, value);
       setValue(localStorage.getItem(key) || defaultValue);

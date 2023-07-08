@@ -19,7 +19,7 @@ export default defineMultiStyleConfig({
       borderColor: 'gray.200'
     },
     item: {
-      transition: transition(),
+      ...transition(.2, ['background']),
       borderRadius: 'xl',
       fontSize: 14,
       fontWeight: 600,

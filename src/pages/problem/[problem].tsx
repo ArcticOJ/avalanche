@@ -1,18 +1,16 @@
 import 'allotment/dist/style.css';
 import {Allotment} from 'allotment';
-import dynamic from 'next/dynamic';
 import useQuery from 'lib/hooks/useQuery';
-import React, {useEffect} from 'react';
+import React, {lazy, useEffect} from 'react';
 import {Code, Heading, TabPanel, TabPanels, Tabs, Text} from '@chakra-ui/react';
 import {TabItem, TabItems} from 'components/TabItem';
-import {Clock, FileText} from 'react-feather';
+import {IconFileText, IconSend} from '@tabler/icons-react';
 import IOSample from 'components/IOSample';
 import Constraints from 'components/Constraints';
 
-const CodeEditor = dynamic(() => import('components/CodeEditor'), {
-  suspense: true,
-  ssr: false
-});
+const CodeEditor = lazy(() => import('components/CodeEditor'));
+
+const Markdown = lazy(() => import('components/Markdown'));
 
 export default function Problem() {
   const problem = useQuery('problem');
@@ -29,16 +27,16 @@ export default function Problem() {
         <Allotment.Pane minSize={300}>
           <Tabs colorScheme='arctic' size='sm'>
             <TabItems ml={2} mt={2}>
-              <TabItem icon={FileText}>
+              <TabItem icon={IconFileText}>
                 Statement
               </TabItem>
-              <TabItem icon={Clock}>
-                Recent submissions
+              <TabItem icon={IconSend}>
+                Submissions
               </TabItem>
             </TabItems>
             <TabPanels>
               <TabPanel>
-                <Constraints mem='256 MB' cpu='1' time='1s' />
+                <Constraints mem='256 MB' io='Standard' time='1s' />
                 <Heading size='lg'>
                   Hello World
                 </Heading>
@@ -49,6 +47,7 @@ export default function Problem() {
                 <IOSample label='Output'>
                   Hello, World.
                 </IOSample>
+                <Markdown url='/static/welcome.md' />
               </TabPanel>
             </TabPanels>
           </Tabs>
@@ -60,4 +59,3 @@ export default function Problem() {
     </div>
   );
 }
-

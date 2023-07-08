@@ -1,5 +1,8 @@
 import {notify} from 'lib/notifications';
-import {units} from 'lib/constants';
+import {units} from 'lib/constants/common';
+import {Property} from 'csstype';
+import TransitionTimingFunction = Property.TransitionTimingFunction;
+import TransitionProperty = Property.TransitionProperty;
 
 export function ensureClientSide<T>(callback: () => T): () => T {
   return 'window' in global ? callback : () => null;
@@ -18,8 +21,16 @@ export function classes(...classNames: string[]): string {
   return classNames.filter(Boolean).join(' ');
 }
 
-export function transition(dura = 0.2, scope = 'all'): string {
-  return `${scope} ${dura}s ease-in-out`;
+export function transition(duration = .2, prop: TransitionProperty[] = ['all'], timingFn: TransitionTimingFunction = 'ease-in-out'): {
+  transitionProperty: string;
+  transitionDuration: string;
+  transitionTimingFunction: string;
+} {
+  return {
+    transitionDuration: duration + 's',
+    transitionProperty: prop.join(', '),
+    transitionTimingFunction: 'var(--chakra-transition-easing-' + timingFn + ')'
+  };
 }
 
 export function round(num: number, precision: number) {

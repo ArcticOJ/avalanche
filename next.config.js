@@ -2,18 +2,11 @@ const withAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true'
 });
 
-const removeImports = require('next-remove-imports')({
-  options: {}
-});
-
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+module.exports = withAnalyzer({
+  output: 'export',
+  images: {
+    unoptimized: true
+  },
   reactStrictMode: false
-};
-
-module.exports = removeImports({
-  ...withAnalyzer(nextConfig),
-  webpack(config) {
-    return config;
-  }
 });

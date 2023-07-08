@@ -1,7 +1,6 @@
 import type {InputProps} from '@chakra-ui/input';
 import {InputRightElement} from '@chakra-ui/input';
-import type {Icon} from 'react-feather';
-import {Eye, EyeOff, Info} from 'react-feather';
+import {Icon, IconEye, IconEyeClosed, IconInfoCircle} from '@tabler/icons-react';
 import {
   forwardRef,
   IconButton,
@@ -28,7 +27,7 @@ export function TextBoxButton({icon, ...props}: Omit<IconButtonProps, 'icon'> & 
     <IconButton tabIndex={-1} borderRadius='full' h='20px' size='xs'
       colorScheme='arctic' {...props}>
       {icon && createElement(icon, {
-        size: 12
+        size: 14
       })}
     </IconButton>
   );
@@ -67,12 +66,12 @@ export default forwardRef<TextBoxProps, 'input'>(({
         <InputRightElement mr={1} color='arctic.100'>
           {description && (
             <Tooltip label={description}>
-              <Info size={16} />
+              <IconInfoCircle size={16} />
             </Tooltip>
           )}
           {type === 'password' && (
             <TextBoxButton onClick={toggle} aria-label='Show/hide password'
-              variant={isPassword ? 'ghost' : 'solid'} icon={isPassword ? Eye : EyeOff} />
+              variant={isPassword ? 'ghost' : 'solid'} icon={isPassword ? IconEye : IconEyeClosed} />
           )}
           {rightElement}
         </InputRightElement>

@@ -1,8 +1,11 @@
-import {Box, Divider, Heading, HStack, Text, VStack, Wrap} from '@chakra-ui/react';
+import {Box, Button, Divider, Heading, HStack, Text, VStack, Wrap} from '@chakra-ui/react';
 import type {Health} from 'lib/types/health';
 import {round, transition} from 'lib/utils/common';
 import useRequest from 'lib/hooks/useRequest';
-import {Server} from 'react-feather';
+import {IconInfoCircle, IconServer} from '@tabler/icons-react';
+import Section from 'components/Section';
+import PropertyTree from 'components/PropertyTree';
+import dayjs from 'dayjs';
 
 function Item({lines, header, isCluster = false}) {
   return (
@@ -16,7 +19,7 @@ function Item({lines, header, isCluster = false}) {
       <Divider my={2} />
       <HStack my={isCluster && 2}>
         <Box alignSelf='center' mr={4}>
-          <Server />
+          <IconServer />
         </Box>
         <div>
           {lines.map((l, i) => (
@@ -53,31 +56,28 @@ export default function ServerPage() {
       ]} />
       <VStack align='stretch'>
         <Heading size='md'>Clusters</Heading>
-        <Divider />
         <Wrap spacing={4}>
           {data.judges.sort().map((judge, i) => (
-            <Item key={i} header={judge.name} isCluster={true} lines={judge.isAlive ? [
-              {
-                name: 'Version',
-                value: judge.version
-              },
-              {
-                name: 'Latency',
-                value: `${round(judge.latency, 3)} ms`
-              },
-              {
-                name: 'Memory',
-                value: `${round(judge.mem, 3)} GB`
-              },
-              {
-                name: 'OS',
-                value: judge.os
-              },
-              {
-                name: 'CPU',
-                value: judge.cpu
-              }
-            ] : []} />
+            <Section title={judge.name} icon={IconServer} key={i} display='flex' gap={2} w='100%'
+              rightItem={<Button size='xs' leftIcon={<IconInfoCircle size={12} />}>Runtimes</Button>}>
+              <PropertyTree properties={{
+                'Version': judge.version,
+                'OS': judge.os,
+                'CPU': judge.cpu,
+                'Memory': round(judge.mem, 3) + 'GB',
+                'Latency': round(judge.latency, 3) + ' ms',
+                'Uptime': dayjs().subtract(judge.uptime, 'second').toNow(true)
+              }} />
+              {/*<SimpleGrid flex={1} m={4} gap={4} minChildWidth='120px'>
+                {judge.runtimes.map(rt => (
+                  <Box borderRadius='xl' bg='gray.800' boxShadow='md' px={4} py={2} key={rt.key}>
+                    {rt.name}
+                    <br />
+                    {rt.version}
+                  </Box>
+                ))}
+              </SimpleGrid>*/}
+            </Section>
           ))}
         </Wrap>
       </VStack>

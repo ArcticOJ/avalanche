@@ -12,9 +12,9 @@ import {
 } from '@chakra-ui/react';
 import {ReactNode} from 'react';
 
-interface BaseModalProps extends ModalProps {
+export interface BaseModalProps extends ModalProps {
   isOpen: boolean;
-  title: string;
+  title?: string;
   footer?: ReactNode;
   bodyProps?: ModalBodyProps;
 

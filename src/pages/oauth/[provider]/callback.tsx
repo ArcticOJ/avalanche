@@ -21,7 +21,7 @@ type Status = {
   data: Error;
 }
 
-export default function Callback() {
+export default function CallbackPage() {
   const [status, setStatus] = useState<Status>({
     status: 'loading'
   });

@@ -1,7 +1,6 @@
-import {useEffect, useRef, useState} from 'react';
+import {useCallback, useRef, useState} from 'react';
 import {WorkerMessage} from 'lib/types/common';
 import {useBoolean} from '@chakra-ui/react';
-import useThrottle from 'lib/hooks/useThrottle';
 
 interface CompilerParameters {
   content(): string;
@@ -25,17 +24,11 @@ interface CompilerHandler {
 
 export default function useCompiler({stdin, stdout, content}: CompilerParameters): CompilerHandler {
   // TODO: Fix C++ 17, bits/stdc++.h, memory_resource.h not found
-  const worker = useRef<Worker>();
+  const worker = useRef<Worker>(null);
   const [ready, setReady] = useState(false);
   const [enabled, setEnabled] = useState(false);
   const [running, {on, off}] = useBoolean();
-  const enable = useThrottle(() => {
-    setEnabled(true);
-    worker.current.postMessage({
-      type: 'init'
-    });
-  }, 2e3);
-  const onMessage = (e: MessageEvent<WorkerMessage>) => {
+  const onMessage = useCallback((e: MessageEvent<WorkerMessage>) => {
     switch (e.data.event) {
     case 'ready':
       setReady(true);
@@ -50,14 +43,25 @@ export default function useCompiler({stdin, stdout, content}: CompilerParameters
       off();
       break;
     }
-  };
-  useEffect(() => {
+  }, []);
+
+  const startWorker = useCallback(() => {
+    setEnabled(true);
+    if (worker.current) {
+      worker.current.terminate();
+      worker.current = null;
+    }
     worker.current = new Worker(new URL('lib/workers/compiler.ts', import.meta.url), {
       name: 'compiler',
       type: 'module'
     });
     worker.current.addEventListener('message', onMessage);
+    worker.current.postMessage({
+      type: 'init'
+    });
     return () => {
+      setEnabled(false);
+      setReady(false);
       worker.current.removeEventListener('message', onMessage);
       worker.current.terminate();
     };
@@ -66,7 +70,7 @@ export default function useCompiler({stdin, stdout, content}: CompilerParameters
     running,
     ready,
     enabled,
-    enable,
+    enable: startWorker,
     abort() {
       if (ready && running)
         worker.current.postMessage({

@@ -1,6 +1,6 @@
 import {Box, chakra, Flex, Heading, VStack} from '@chakra-ui/react';
 import {Children, createElement, PropsWithChildren, ReactElement, ReactNode, useState} from 'react';
-import {Icon} from 'react-feather';
+import {Icon} from '@tabler/icons-react';
 import {transition} from 'lib/utils/common';
 import {motion} from 'framer-motion';
 
@@ -35,8 +35,8 @@ export function SegmentedControl({items, children}: PropsWithChildren<SegmentedC
     <VStack align='stretch'>
       <Flex p={2} w='100%' h={20} bg='gray.900' borderRadius='xl' gap={2}>
         {Children.map(Children.only(items as ReactElement).props.children, (c, i) => (
-          <Box transition={transition(0.25)} onClick={() => setSelected(i)}
-            color={selected !== i && 'gray.300'}
+          <Box {...transition(.25, ['color'])} onClick={() => setSelected(i)}
+            color={selected !== i && 'gray.300'} key={i}
             pos='relative' h='100%' w='100%'
             cursor='pointer'>
             {selected === i && (
@@ -49,7 +49,7 @@ export function SegmentedControl({items, children}: PropsWithChildren<SegmentedC
         ))}
       </Flex>
       {Children.map(children, (c, i) => (
-        <div style={{
+        <div key={i} style={{
           display: selected !== i && 'none'
         }}>
           {c}

@@ -40,15 +40,6 @@ export class Compiler {
     this.cdnUrl = options.cdnUrl || '/static';
     this.memfsFilename = options.memfs || 'memfs';
     this.onReady = options.onReady;
-    Compiler.compileStreaming(this.cdnUrl + this.memfsFilename).then(mod => {
-      this.moduleCache[this.memfsFilename] = mod;
-      this.memfs = new MemFS({
-        wmem: this.mem,
-        compiledModule: mod,
-        emit: options.onEmit,
-        memfsFilename: this.cdnUrl + (options.memfs || 'memfs')
-      });
-    });
   }
 
   static async compileStreaming(filename) {
@@ -58,6 +49,14 @@ export class Compiler {
 
   async init() {
     if (this.isReady) return;
+    const mod = await Compiler.compileStreaming(this.cdnUrl + this.memfsFilename);
+    this.moduleCache[this.memfsFilename] = mod;
+    this.memfs = new MemFS({
+      wmem: this.mem,
+      compiledModule: mod,
+      emit: this.emit,
+      memfsFilename: this.cdnUrl + this.memfsFilename
+    });
     this.isInitializing = true;
     await this.memfs.ready;
     await this.preloadBundle();
@@ -67,7 +66,6 @@ export class Compiler {
   }
 
   hostWrite(data) {
-    console.log(data);
     this.emit('output', data);
   }
 
@@ -86,10 +84,7 @@ export class Compiler {
   }
 
   async hostLogAsync(message, promise) {
-    console.log(message);
-    const result = await promise;
-    console.info('Done.');
-    return result;
+    return await promise;
   }
 
   async getModule(name) {
@@ -150,7 +145,6 @@ export class Compiler {
         type: 'module'
       });
       this.runner.onmessage = e => {
-        console.log(e);
         switch (e.data.event) {
         case 'output':
           this.hostWrite(e.data.data);

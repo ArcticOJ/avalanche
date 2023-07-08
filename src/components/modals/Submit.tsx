@@ -1,7 +1,15 @@
 import BaseModal from 'components/modals/BaseModal';
 import {Box, Button, Flex, Heading, Link, VStack} from '@chakra-ui/react';
 import {useDropzone} from 'react-dropzone';
-import {Clipboard, Code, Folder, Send, Terminal, UploadCloud} from 'react-feather';
+import {
+  IconCopy,
+  IconFileCode,
+  IconFolder,
+  IconSend,
+  IconSourceCode,
+  IconTerminal,
+  IconUpload
+} from '@tabler/icons-react';
 import {Segment, SegmentedControl} from 'components/SegmentedControl';
 import TextBox from 'components/TextBox';
 import useFetch from 'lib/hooks/useFetch';
@@ -40,19 +48,21 @@ function SubmitFromCLI() {
   return (
     <Box>
       <VStack align='stretch' my={2} spacing={4}>
-        <TextBox icon={Folder} placeholder='Path to your code' value={path} onChange={e => setPath(e.target.value)} />
+        <TextBox icon={IconFolder} placeholder='Path to your code' value={path}
+          onChange={e => setPath(e.target.value)} />
         {supportedCli.map(({name, url, command}) => <VStack key={name} align='left'>
           <Heading size='xs' as='h6' ml={2}>
               Via <Link target='_blank' href={url} color='arctic.300'>{name}</Link>
           </Heading>
           <Flex gap={2}>
-            <TextBox isReadOnly flex={1} fontFamily='Inconsolata' wordBreak='break-word' value={templite(command, {
-              origin: ensureClientSide(() => window.location.origin)(),
-              problem: 'hello-world',
-              apiKey: data.apiKey,
-              pathToFile: debouncedValue
-            })} />
-            <Button leftIcon={<Clipboard size={16} />}>
+            <TextBox isReadOnly flex={1} fontFamily='mono' wordBreak='break-word'
+              value={templite(command, {
+                origin: ensureClientSide(() => window.location.origin)(),
+                problem: 'hello-world',
+                apiKey: data.apiKey,
+                pathToFile: debouncedValue
+              })} />
+            <Button leftIcon={<IconCopy size={16} />}>
                 Copy
             </Button>
           </Flex>
@@ -79,22 +89,22 @@ export default function Submit({isOpen, onClose, callback, isBusy}) {
       <VStack spacing={4} mb={4} align='stretch'>
         <SegmentedControl items={
           <>
-            <Segment icon={Folder} label='Local file' />
-            <Segment icon={Code} label='Current code' />
-            <Segment icon={Terminal} label='From CLI' />
+            <Segment icon={IconFileCode} label='Local file' />
+            <Segment icon={IconSourceCode} label='Current code' />
+            <Segment icon={IconTerminal} label='From CLI' />
           </>
         }>
           <Box>
             <VStack {...getRootProps()} cursor='pointer' borderWidth={2} borderColor='arctic.300' borderStyle='dashed'
               borderRadius='xl'
               w='100%' p={6}>
-              <UploadCloud size={28} />
+              <IconUpload size={28} />
               <Heading size='xs' as='h6'>
                 Click or drag and drop here to upload
               </Heading>
               <input {...getInputProps()} />
             </VStack>
-            <Button mt={2} w='100%' leftIcon={<Send size={16} />} isDisabled={acceptedFiles.length != 1}
+            <Button mt={2} w='100%' leftIcon={<IconSend size={16} />} isDisabled={acceptedFiles.length !== 1}
               onClick={() => {
                 callback(acceptedFiles[0]);
               }} isLoading={isBusy}
@@ -118,7 +128,13 @@ export default function Submit({isOpen, onClose, callback, isBusy}) {
             <Prism code={acceptedFiles[0] ? acceptedFiles[0].text() : ''} language='cpp' />
           </Box>*/}
           <Box>
-
+            <Button w='100%' leftIcon={<IconSend size={16} />}
+              onClick={() => {
+                callback(null);
+              }} isLoading={isBusy}
+              loadingText='Submitting'>
+              Submit
+            </Button>
           </Box>
           <SubmitFromCLI />
         </SegmentedControl>

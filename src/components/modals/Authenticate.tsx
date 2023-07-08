@@ -1,7 +1,6 @@
 import {
   Button,
   HStack,
-  Image,
   Link,
   Skeleton,
   Spacer,
@@ -13,7 +12,7 @@ import {
   useBoolean,
   VStack
 } from '@chakra-ui/react';
-import {AtSign, Briefcase, Edit, Lock, LogIn, Mail, User} from 'react-feather';
+import {IconAt, IconBuilding, IconEdit, IconLock, IconLogin, IconMail, IconUser} from '@tabler/icons-react';
 import Separator from 'components/Separator';
 import {FastField, Formik} from 'formik';
 import TextField from 'components/TextField';
@@ -30,14 +29,13 @@ import useFetch from 'lib/hooks/useFetch';
 import {resolveProps} from 'lib/oauth/resolver';
 
 function OAuthLoginButton({provider}) {
-  const {imageProps, buttonProps} = resolveProps(provider);
+  const buttonProps = resolveProps(provider);
   return (
-    <Button flex={1} key={provider} onClick={() => createOAuthRequest(provider, 'login')}
-      leftIcon={<Image alt='OAuth' {...imageProps} />} {...buttonProps} />
+    <Button flex={1} key={provider} onClick={() => createOAuthRequest(provider, 'login')} {...buttonProps} />
   );
 }
 
-function LoginForm() {
+function LoginForm({onClose}) {
   const {revalidate} = useAuth();
   const {data, isLoading} = useFetch('/api/oauth', {
     revalidateOnFocus: false,
@@ -65,7 +63,8 @@ function LoginForm() {
           body: values
         });
         await revalidate();
-        notify('Response', JSON.stringify(r));
+        notify('Success', 'Successfully logged in!', 'success', IconLogin);
+        onClose();
       } finally {
         setSubmitting(false);
       }
@@ -73,8 +72,8 @@ function LoginForm() {
       {({handleSubmit, isSubmitting}) => (
         <form onSubmit={handleSubmit}>
           <VStack spacing={4} align='stretch'>
-            <TextField placeholder='Handle or email' icon={User} name='handle' autoComplete='username' />
-            <TextField placeholder='Password' icon={Lock} type='password' name='password'
+            <TextField placeholder='Handle or email' icon={IconUser} name='handle' autoComplete='username' />
+            <TextField placeholder='Password' icon={IconLock} type='password' name='password'
               autoComplete='current-password' />
             <HStack>
               <FastField as={CheckBox} name='rememberMe'>
@@ -88,10 +87,10 @@ function LoginForm() {
             <Button type='submit'
               loadingText='Logging in'
               isLoading={isSubmitting}
-              leftIcon={<LogIn size={16} />}>
+              leftIcon={<IconLogin size={16} />}>
               {t('auth.login')}
             </Button>
-            {data.providers.length > 0 ? (
+            {data!.providers.length > 0 ? (
               <>
                 <Separator>
                   {t('auth.orLoginWith')}
@@ -102,7 +101,7 @@ function LoginForm() {
                   }
                 }}>
                   {/* TODO: customize oauth providers */}
-                  {data.providers.map(provider => (
+                  {data!.providers.map(provider => (
                     <OAuthLoginButton provider={provider} key={provider} />
                   ))}
                 </HStack>
@@ -117,7 +116,7 @@ function LoginForm() {
   );
 }
 
-function RegisterForm() {
+function RegisterForm({onClose}) {
   const {t} = usei18n();
   return (
     <Formik
@@ -151,14 +150,14 @@ function RegisterForm() {
       {({handleSubmit, isSubmitting}) => (
         <form onSubmit={handleSubmit}>
           <VStack spacing={4} align='stretch'>
-            <TextField placeholder='Display name' icon={User} autoComplete='name' name='displayName' />
-            <TextField placeholder='Handle' icon={AtSign} autoComplete='username' name='handle' />
-            <TextField placeholder='Email' icon={Mail} type='email' name='email'
+            <TextField placeholder='Display name' icon={IconUser} autoComplete='name' name='displayName' />
+            <TextField placeholder='Handle' icon={IconAt} autoComplete='username' name='handle' />
+            <TextField placeholder='Email' icon={IconMail} type='email' name='email'
               description='This email might be used to retrieve your avatar via Gravatar.' />
-            <PasswordBox name='password' placeholder='Password' icon={Lock} />
-            <TextField placeholder='Confirm password' icon={Lock} type='password' autoComplete='off'
+            <PasswordBox name='password' placeholder='Password' icon={IconLock} />
+            <TextField placeholder='Confirm password' icon={IconLock} type='password' autoComplete='off'
               name='confirmPassword' />
-            <TextField placeholder='Organization' icon={Briefcase} autoComplete='organization'
+            <TextField placeholder='Organization' icon={IconBuilding} autoComplete='organization'
               name='organization' />
             <Text fontSize={13} fontWeight={600}>{t('acceptToc')}<Link color='arctic.200'
               fontSize={13}>{t('toc')}</Link></Text>
@@ -166,7 +165,7 @@ function RegisterForm() {
               type='submit'
               loadingText='Registering'
               isLoading={isSubmitting}
-              leftIcon={<Edit size={16} />}>
+              leftIcon={<IconEdit size={16} />}>
               {t('auth.register')}
             </Button>
           </VStack>
@@ -183,19 +182,19 @@ export default function AuthModal({isOpen, onClose}) {
     <BaseModal isOpen={isOpen} onClose={onClose} title={isLogin ? t('auth.log2arctic') : t('auth.reg4account')}>
       <Tabs variant='filled' index={isLogin ? 0 : 1} onChange={c => c === 1 ? off() : on()} isFitted>
         <TabList gap={2} mx={4}>
-          <TabIcon icon={LogIn}>
+          <TabIcon icon={IconLogin}>
             {t('auth.login')}
           </TabIcon>
-          <TabIcon icon={Edit}>
+          <TabIcon icon={IconEdit}>
             {t('auth.register')}
           </TabIcon>
         </TabList>
         <TabPanels>
           <TabPanel>
-            <LoginForm />
+            <LoginForm onClose={onClose} />
           </TabPanel>
           <TabPanel>
-            <RegisterForm />
+            <RegisterForm onClose={onClose} />
           </TabPanel>
         </TabPanels>
       </Tabs>

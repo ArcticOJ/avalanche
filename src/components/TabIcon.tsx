@@ -1,6 +1,6 @@
 import {forwardRef, HStack, Tab, TabProps, Text} from '@chakra-ui/react';
 import React, {createElement} from 'react';
-import {Icon} from 'react-feather';
+import {Icon} from '@tabler/icons-react';
 
 export interface TabIconProps extends TabProps {
   icon?: Icon;

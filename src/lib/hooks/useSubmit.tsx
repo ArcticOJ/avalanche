@@ -4,6 +4,7 @@ import useQuery from 'lib/hooks/useQuery';
 import {useBoolean, useDisclosure} from '@chakra-ui/react';
 import SubmitModal from 'components/modals/Submit';
 import useThrottle from 'lib/hooks/useThrottle';
+import {notify} from 'lib/notifications';
 
 interface JudgementStatus {
   status: Verdict;
@@ -27,12 +28,11 @@ export default function useSubmit(): SubmitHandler {
     on();
     const formData = new FormData();
     formData.append('code', file);
-    formData.append('streamed', 'true');
     const r = await fetch(`/api/contests/${problem}/submit`, {
       method: 'POST',
       body: formData
     });
-    if (r.ok) {
+    if (r.ok && r.body) {
       const reader = r.body.pipeThrough(new TextDecoderStream()).getReader();
       while (true) {
         const {done, value} = await reader.read();
@@ -40,7 +40,7 @@ export default function useSubmit(): SubmitHandler {
           break;
         for (const d of value.split('\n').map(f => f.trim()).filter(f => f !== '')) {
           const data: JudgementStatus = JSON.parse(d);
-          console.log(data);
+          notify('Response', JSON.stringify(data));
           if (!data) break;
           setFinalStatus(data.status);
           if (data.status !== Verdict.Pending)
@@ -52,10 +52,11 @@ export default function useSubmit(): SubmitHandler {
       off();
     setTimeout(() => setFinalStatus(Verdict.None), 2e3);
   }, 2e3);
+  const modal = (
+    <SubmitModal isOpen={isOpen} onClose={onClose} callback={onSubmit} isBusy={busy} />
+  );
   return {
-    submitModal: (
-      <SubmitModal isOpen={isOpen} onClose={onClose} callback={onSubmit} isBusy={busy} />
-    ),
+    submitModal: modal,
     status: finalStatus,
     submit: onOpen
   };

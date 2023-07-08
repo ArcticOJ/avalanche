@@ -19,8 +19,10 @@
     "jsx": "preserve",
     "noEmit": true,
     "baseUrl": "src",
-    "rootDir": "src",
     "paths": {
+      "react": [
+        "../node_modules/@types/react"
+      ],
       "lib/*": [
         "lib/*"
       ],
@@ -38,13 +40,22 @@
       ]
     },
     "allowJs": true,
-    "incremental": true
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "next-env.d.ts",
     "avalanche.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "/data/Dev/avalanche-wrapper/bundle/types/**/*.ts",
+    "/data/Dev/avalanche-wrapper/avalanche/bundle/types/**/*.ts",
+    "dist/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

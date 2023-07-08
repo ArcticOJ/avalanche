@@ -1,11 +1,13 @@
 import {MutableRefObject, useEffect, useRef} from 'react';
-import type {Terminal} from 'xterm';
-import type {FitAddon} from 'xterm-addon-fit';
+import {Terminal} from 'xterm';
+import {FitAddon} from 'xterm-addon-fit';
 import useThrottle from 'lib/hooks/useThrottle';
+import {CanvasAddon} from 'xterm-addon-canvas';
+import {inconsolata} from 'lib/themes/fonts';
 
 interface ConsoleHandler {
   inputRef: MutableRefObject<HTMLTextAreaElement>;
-  outputRef: MutableRefObject<HTMLDivElement>
+  outputRef: MutableRefObject<HTMLDivElement>;
 
   clear(): void;
 
@@ -29,15 +31,13 @@ export default function useConsole(ready: boolean): ConsoleHandler {
   useEffect(() => {
     if (ready) {
       (async () => {
+        if (!outRef.current) return;
         if (termRef.current)
           termRef.current.dispose();
-        const {Terminal} = await import('xterm');
-        const {CanvasAddon} = await import('xterm-addon-canvas');
-        const {FitAddon} = await import('xterm-addon-fit');
         termRef.current = new Terminal({
           disableStdin: true,
           cursorStyle: 'underline',
-          fontFamily: '"Inconsolata", monospace',
+          fontFamily: inconsolata,
           fontWeight: 500,
           fontSize: 16,
           scrollback: Number.MAX_SAFE_INTEGER,
@@ -71,7 +71,7 @@ export default function useConsole(ready: boolean): ConsoleHandler {
         termRef.current.write(s);
     },
     read() {
-      return inpRef.current.value;
+      return inpRef.current.value || '';
     }
   };
 }

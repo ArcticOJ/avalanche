@@ -165,7 +165,7 @@ export class MemFS {
 
   memfs_log(buf, len) {
     this.mem.check();
-    console.log(this.mem.readStr(buf, len));
+    //console.log(this.mem.readStr(buf, len));
   }
 
   copy_out(clang_dst, memfs_src, size) {

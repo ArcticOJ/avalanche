@@ -17,7 +17,7 @@ import {
   VStack,
   Wrap
 } from '@chakra-ui/react';
-import {Search} from 'react-feather';
+import {IconSearch} from '@tabler/icons-react';
 import {Problem} from 'lib/types/contests';
 import React from 'react';
 import {useRouter} from 'next/router';
@@ -32,7 +32,7 @@ export default function Problems() {
   return (
     <Flex h='100%' gap={4} p={4} mx='auto' justify='center' align='start'>
       <VStack borderRadius='2xl' p={2} bg='gray.800' align='stretch'>
-        <TextBox icon={Search} placeholder='Find a problem' type='search' />
+        <TextBox icon={IconSearch} placeholder='Find a problem' type='search' />
         <Wrap>
           <Tag>
             easy
@@ -59,9 +59,9 @@ export default function Problems() {
           <Tbody>
             {data.map(problem => (
               <chakra.button
-                transition={transition()}
+                {...transition()}
                 cursor='pointer'
-                onClick={() => push(`/problems/${problem.id}`)}
+                onClick={() => push(`/problem/${problem.id}`)}
                 key={problem.id}
                 _hover={{bg: 'gray.600'}}
                 _active={{bg: 'gray.700'}}

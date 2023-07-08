@@ -1,11 +1,11 @@
 import {switchAnatomy} from '@chakra-ui/anatomy';
 import {createMultiStyleConfigHelpers} from '@chakra-ui/react';
 
-const {defineMultiStyleConfig} =
+const {definePartsStyle, defineMultiStyleConfig} =
   createMultiStyleConfigHelpers(switchAnatomy.keys);
 
 export default defineMultiStyleConfig({
-  baseStyle: {
+  baseStyle: definePartsStyle({
     track: {
       p: 1,
       borderWidth: 2,
@@ -23,5 +23,5 @@ export default defineMultiStyleConfig({
         bg: 'arctic.700'
       }
     }
-  }
+  })
 });

@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 
 interface RequestHandler<T> {
   latency: number;
-  data: T;
+  data: T | undefined;
 
   request();
 }
@@ -24,9 +24,7 @@ export default function useRequest<T>(endpoint: string): RequestHandler<T> {
     req();
   }, []);
   return {
-    request() {
-      req();
-    },
+    request: req,
     latency,
     data
   };

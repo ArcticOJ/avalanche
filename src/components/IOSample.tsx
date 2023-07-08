@@ -1,5 +1,5 @@
 import {Box, Heading, IconButton, VStack} from '@chakra-ui/react';
-import {Clipboard} from 'react-feather';
+import {IconCopy} from '@tabler/icons-react';
 import React from 'react';
 
 export interface IOSampleProps {
@@ -16,7 +16,7 @@ export default function IOSample({label, children}: IOSampleProps) {
       <Box bg='gray.800' p={4} borderRadius='2xl' position='relative' fontWeight={600} fontSize={14}>
         <IconButton display='flex' aria-label='Copy to clipboard'
           position='absolute' right={4} top={4}>
-          <Clipboard size={16} />
+          <IconCopy size={16} />
         </IconButton>
         <code>
           {children.split('\\n').map((line, i) => (

@@ -1,0 +1,24 @@
+svg.heatmap {
+  margin: auto;
+
+  text {
+    fill: var(--chakra-colors-gray-300);
+    font-size: 10px;
+    text-anchor: middle;
+  }
+
+  rect:not(.disabled) {
+    transition: fill .2s ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+      fill: var(--chakra-colors-gray-500);
+      stroke-width: 1px;
+    }
+
+    &:active {
+      fill: var(--chakra-colors-arctic-700);
+      stroke-width: 0;
+    }
+  }
+}

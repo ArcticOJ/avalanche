@@ -53,7 +53,6 @@ export class Tar {
       this.offset += entry.size;
       this.alignUp();
     } else if (entry.type !== '5') { // Directory.
-      console.log('type', entry.type);
       assert(false);
     }
     return entry;

@@ -1,15 +1,20 @@
-import type {ButtonProps, ImageProps} from '@chakra-ui/react';
+import type {ButtonProps} from '@chakra-ui/react';
+import Discord from 'components/icons/Discord';
+import GitHub from 'components/icons/GitHub';
+import {createElement} from 'react';
+import {Icon} from '@tabler/icons-react';
 
 const providerMetadata = {
   'github': {
     name: 'GitHub',
-    shouldInvertColor: true,
+    icon: GitHub,
     background: {
       colorScheme: 'gray'
     }
   },
   'discord': {
     name: 'Discord',
+    icon: Discord,
     background: {
       bg: '#9cace5',
       hover: '#8095de',
@@ -18,27 +23,28 @@ const providerMetadata = {
   }
 };
 
-export function resolveName(provider: string): string {
-  return Object.hasOwn(providerMetadata, provider) ? providerMetadata[provider].name : provider;
+export function resolveProvider(provider: string): { name: string, icon: Icon } {
+  if (!Object.hasOwn(providerMetadata, provider)) return null;
+  const metadata = providerMetadata[provider];
+  return {
+    name: metadata.name || provider,
+    icon: metadata.icon
+  };
 }
 
-export function resolveProps(provider: string): {
-  buttonProps: Partial<ButtonProps>,
-  imageProps: Partial<ImageProps>
-} {
-  const buttonProps: ButtonProps = {}, imageProps: ImageProps = {
-    boxSize: 4
-  };
+export function resolveProps(provider: string): Partial<ButtonProps> {
+  const buttonProps: ButtonProps = {};
   if (Object.hasOwn(providerMetadata, provider)) {
     const m = providerMetadata[provider];
     const bg = m.background;
-    imageProps.alt = buttonProps.children = m.name;
-    imageProps.src = `/static/logos/${provider}.svg`;
-    if (m.shouldInvertColor)
-      imageProps.filter = 'invert(1)';
-    if (Object.hasOwn(bg, 'colorScheme'))
+    buttonProps.children = m.name;
+    if (m.icon)
+      buttonProps.leftIcon = createElement(m.icon, {
+        size: 16
+      });
+    if (bg.colorScheme) {
       buttonProps.colorScheme = bg.colorScheme;
-    else {
+    } else {
       buttonProps.bg = bg.bg;
       buttonProps._hover = {
         bg: bg.hover
@@ -48,8 +54,5 @@ export function resolveProps(provider: string): {
       };
     }
   }
-  return {
-    buttonProps,
-    imageProps
-  };
+  return buttonProps;
 }

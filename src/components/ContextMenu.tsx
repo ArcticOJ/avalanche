@@ -1,6 +1,6 @@
-import type {Icon} from 'react-feather';
-import {createElement, useEffect, useRef, useState} from 'react';
-import {HStack, Kbd, Menu, MenuDivider, MenuItem, MenuList} from '@chakra-ui/react';
+import type {Icon} from '@tabler/icons-react';
+import {createElement, useCallback, useEffect, useRef, useState} from 'react';
+import {HStack, Kbd, Menu, MenuDivider, MenuItem, MenuList, useConst} from '@chakra-ui/react';
 import {ensureClientSide} from 'lib/utils/common';
 
 interface ContextMenuProps {
@@ -28,26 +28,27 @@ export interface ContextMenuDivider {
 
 export default function ContextMenu({isOpen, onClose, onToggle, container, children}: ContextMenuProps) {
   const [pos, setPos] = useState({x: 0, y: 0});
-  const ref = useRef<HTMLDivElement>(null);
-  const metaKey = ensureClientSide(() => /mac os x/i.test(navigator.userAgent) ? '⌘' : 'Ctrl')();
-  const onContextMenu = (e: MouseEvent) => {
+  const metaKey = useConst(ensureClientSide(() => /mac os x/i.test(navigator.userAgent) ? '⌘' : 'Ctrl'));
+  const menuRef = useRef<HTMLDivElement>();
+  const onContextMenu = useCallback(async (e: MouseEvent) => {
     e.preventDefault();
-    const rect = container.getBoundingClientRect();
-    const menuRect = ref.current.getBoundingClientRect();
+    const viewportRect = document.body.getBoundingClientRect();
+    const menuRect = menuRef.current.getBoundingClientRect();
     setPos({
-      x: Math.min(e.offsetX, menuRect.width + rect.width),
-      y: Math.min(e.offsetY, menuRect.height + rect.height)
+      x: Math.min(e.pageX, viewportRect.width - menuRect.width),
+      y: Math.min(e.pageY, viewportRect.height - menuRect.height)
     });
     onToggle();
-  };
+  }, []);
   useEffect(() => {
     if (!container) return;
     container.addEventListener('contextmenu', onContextMenu);
     return () => container.removeEventListener('contextmenu', onContextMenu);
   }, [container]);
+
   return (
     <Menu isOpen={isOpen} onClose={onClose}>
-      <MenuList left={pos.x} top={pos.y} pos='absolute' ref={ref}>
+      <MenuList left={pos.x} top={pos.y} pos='fixed' ref={menuRef}>
         {children.map((item, i) => item.type === 'divider' ? (
           <MenuDivider key={i} />
         ) : (

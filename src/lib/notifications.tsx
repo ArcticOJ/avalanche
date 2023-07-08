@@ -1,6 +1,6 @@
 import {createStandaloneToast} from '@chakra-ui/react';
 import Notification from 'components/notifications/Notification';
-import {AlertTriangle, CheckCircle, Icon, Info, XOctagon} from 'react-feather';
+import {Icon, IconAlertHexagon, IconAlertTriangle, IconCircleCheck, IconInfoCircle} from '@tabler/icons-react';
 import {createElement, ReactNode} from 'react';
 import {ToastStatus} from '@chakra-ui/toast/dist/toast.types';
 
@@ -9,7 +9,7 @@ const {
 } = createStandaloneToast();
 
 function getDefaultIcon(status: ToastStatus): Icon {
-  return status === 'success' ? CheckCircle : status === 'error' ? XOctagon : status === 'warning' ? AlertTriangle : status === 'info' ? Info : null;
+  return status === 'success' ? IconCircleCheck : status === 'error' ? IconAlertHexagon : status === 'warning' ? IconAlertTriangle : status === 'info' ? IconInfoCircle : null;
 }
 
 export function notify(title: string, message: ReactNode | string, status: ToastStatus = 'info', icon: Icon = getDefaultIcon(status)) {

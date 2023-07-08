@@ -1,6 +1,6 @@
 import {createContext, ReactNode, useContext} from 'react';
-import vi from 'i18n/translations.vi.json';
-import en from 'i18n/translations.en.json';
+import vi from 'i18n/translation.vi';
+import en from 'i18n/translation.en';
 import useLocalStorage from 'lib/hooks/useLocalStorage';
 import templite from 'templite';
 
@@ -40,19 +40,14 @@ export function TranslationProvider({children, defaultLanguage}: TranslationProv
         translations[value]
       );
       const template = transStr || key;
-      if (!template)
-        return '';
-      try {
-        return templite(template, obj);
-      } catch (e) {
-        return template;
-      }
+      return templite(template, obj);
     },
     currentLanguage: value,
     switchLanguage() {
       set(value === 'vi' ? 'en' : 'vi');
     }
   };
+
   return (
     <TranslationContext.Provider value={handler}>
       {children}

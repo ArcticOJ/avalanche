@@ -11,17 +11,18 @@ interface ContextMenuHandler {
 export default function useContextMenu(items: Array<ContextMenuItem | ContextMenuDivider>): ContextMenuHandler {
   const [container, setContainer] = useState<HTMLElement>();
   const {isOpen, onClose, onToggle} = useDisclosure();
+  // eslint-disable-next-line react/no-children-prop
+  const menu = createElement(ContextMenu, {
+    isOpen,
+    onClose,
+    onToggle,
+    container,
+    children: items
+  });
   return {
     bind(element) {
       setContainer(element);
     },
-    // eslint-disable-next-line react/no-children-prop
-    menu: createElement(ContextMenu, {
-      isOpen,
-      onClose,
-      onToggle,
-      container,
-      children: items
-    })
+    menu
   };
 }

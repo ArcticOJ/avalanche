@@ -14,7 +14,6 @@ interface MemObj {
 }
 
 function emit(event: string, data?: any) {
-  console.log(event, data);
   postMessage({
     event,
     data

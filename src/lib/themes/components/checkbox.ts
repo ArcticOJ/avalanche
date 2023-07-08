@@ -8,7 +8,7 @@ const {definePartsStyle, defineMultiStyleConfig} =
 export default defineMultiStyleConfig({
   baseStyle: definePartsStyle({
     control: {
-      transition: transition(),
+      ...transition(.2, ['background']),
       borderRadius: 'md',
       h: 4,
       w: 4

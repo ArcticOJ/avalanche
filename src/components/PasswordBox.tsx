@@ -9,11 +9,10 @@ import {
   useBoolean,
   VStack
 } from '@chakra-ui/react';
-import {Check, X} from 'react-feather';
+import {IconCheck, IconX} from '@tabler/icons-react';
 import TextBox, {TextBoxProps} from 'components/TextBox';
 import {FastField, useField} from 'formik';
-import {createElement, useMemo} from 'react';
-import {transition} from 'lib/utils/common';
+import {createElement} from 'react';
 
 const criterias = [
   {re: /^\S{6,}$/, label: 'Includes 6 characters and no whitespace'},
@@ -25,7 +24,7 @@ const criterias = [
 function Criteria({result}) {
   return (
     <HStack color={`${result.result ? 'arctic' : 'red'}.200`}>
-      {createElement(result.result ? Check : X,
+      {createElement(result.result ? IconCheck : IconX,
         {
           size: 16
         })}
@@ -38,13 +37,13 @@ function Criteria({result}) {
 
 export default function PasswordBox({type = 'password', name, ...props}: TextBoxProps) {
   const [{value}, {error, touched}] = useField(name);
-  const isInvalid = useMemo(() => error && touched, [error, touched]);
+  const isInvalid = error && touched;
   const [show, {on, off}] = useBoolean(false);
-  const results = useMemo(() => criterias.map(f => ({
+  const results = criterias.map(f => ({
     result: f.re.test(value),
     label: f.label
-  })), [value]);
-  const progress = useMemo(() => results.filter(r => r.result).length / results.length * 100, [results]);
+  }));
+  const progress = results.filter(r => r.result).length / results.length * 100;
   return (
     <FormControl isInvalid={isInvalid}>
       <Collapse in={show} animateOpacity startingHeight={32}>
@@ -52,13 +51,9 @@ export default function PasswordBox({type = 'password', name, ...props}: TextBox
           <FastField as={TextBox} type={type} autoComplete='new-password'
             name={name} onFocusCapture={on} onBlurCapture={off} {...props} />
           <Box bg='gray.700' px={4} pt={4} pb={2} borderRadius='xl'>
-            <Progress sx={{
-              '&>div[role="progressbar"]': {
-                transition: transition()
-              }
-            }} value={progress} colorScheme='arctic' borderRadius='xl'
-            size='xs'
-            mb={2} />
+            <Progress value={progress}
+              size='xs'
+              mb={2} />
             <VStack align='stretch'>
               {results.map((c, i) => (
                 <Criteria result={c} key={i} />

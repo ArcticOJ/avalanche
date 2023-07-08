@@ -28,21 +28,21 @@ export const TabItems = forwardRef(({
 });
 
 export const TabItem = forwardRef<TabIconProps, any>((props, ref) => {
-  const tabProps = useTab({...props, ref});
+  const {icon, ...tabProps} = useTab({...props, ref}) as any;
   const id = tabProps.id.split(':')[1];
   const isSelected = !!tabProps['aria-selected'];
   const hasIcon = !!props.icon;
   const [arctic] = useToken('colors', ['arctic.200']);
   return (
-    <VStack>
+    <VStack spacing={1}>
       <chakra.button borderRadius='md' _hover={{
         bg: 'gray.700'
       }} _active={{
         bg: 'gray.800'
-      }} transition={transition(0.25)} fontSize='sm' h={hasIcon && 8} px={hasIcon ? 4 : 2}
+      }} {...transition(.25)} fontSize='sm' h={hasIcon && 8} px={hasIcon ? 4 : 2}
       fontWeight={isSelected && 600} {...tabProps}>
         <HStack>
-          {hasIcon && createElement(props.icon, {
+          {hasIcon && createElement(icon, {
             size: 16
           })}
           <Text noOfLines={1} textAlign='left'>
@@ -55,7 +55,6 @@ export const TabItem = forwardRef<TabIconProps, any>((props, ref) => {
           style={{
             width: '60%',
             height: 3,
-            marginTop: 3,
             borderRadius: 2,
             background: arctic
           }} />
