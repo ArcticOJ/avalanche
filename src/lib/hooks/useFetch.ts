@@ -6,12 +6,14 @@ type Err = RestError | Error;
 type Options<T> = Partial<PublicConfiguration<T, Err, BareFetcher<T>>>;
 
 export default function useFetch<T = any>(endpoint: string, options?: Options<T>): SWRResponse<T, Err> {
-  return useSWR<T, Err>(endpoint, (u: string) =>
-    fetch(u).then(r => {
-      if (!r.ok) throw new Error(r.status.toString());
-      return r.json();
-    }).then(r => {
-      if (r.message) throw new Error(r.message);
-      return r;
-    }), {suspense: true, ...options});
+  return useSWR<T, Err>(endpoint, async (u: string) => {
+    const r = await fetch(u);
+    if (!r.ok) {
+      const e = new Error('Failed to fetch data');
+      e['info'] = await r.json();
+      e['status'] = r.status;
+      throw e;
+    }
+    return r.json();
+  }, {suspense: true, ...options});
 }

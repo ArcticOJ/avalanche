@@ -33,26 +33,11 @@ export default function Problems() {
     <Flex h='100%' gap={4} p={4} mx='auto' justify='center' align='start'>
       <VStack borderRadius='2xl' p={2} bg='gray.800' align='stretch'>
         <TextBox icon={IconSearch} placeholder='Find a problem' type='search' />
-        <Wrap>
-          <Tag>
-            easy
-          </Tag>
-          <Tag>
-            beginner
-          </Tag>
-          <Tag>
-            numbers
-          </Tag>
-          <Tag>
-            strings
-          </Tag>
-        </Wrap>
         <Divider />
         <Table>
           <Thead>
             <Tr>
-              <Th>ID</Th>
-              <Th>Name</Th>
+              <Th>Title</Th>
               <Th>Tags</Th>
             </Tr>
           </Thead>
@@ -66,12 +51,11 @@ export default function Problems() {
                 _hover={{bg: 'gray.600'}}
                 _active={{bg: 'gray.700'}}
                 as='tr'>
-                <Td>{problem.id}</Td>
                 <Td>{problem.title}</Td>
                 <Td>
                   <HStack>
-                    {problem.tags.map(tag => (
-                      <Tag key={tag} colorScheme='arctic' variant='solid'>
+                    {problem.tags.map((tag, i) => (
+                      <Tag key={problem.id + i} colorScheme='arctic' variant='solid'>
                         {tag}
                       </Tag>
                     ))}

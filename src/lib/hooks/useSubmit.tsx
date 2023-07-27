@@ -1,8 +1,7 @@
-import {ReactElement, useState} from 'react';
+import {lazy, ReactElement, useState} from 'react';
 import {Verdict} from 'lib/types/submissions';
 import useQuery from 'lib/hooks/useQuery';
 import {useBoolean, useDisclosure} from '@chakra-ui/react';
-import SubmitModal from 'components/modals/Submit';
 import useThrottle from 'lib/hooks/useThrottle';
 import {notify} from 'lib/notifications';
 
@@ -18,6 +17,8 @@ interface SubmitHandler {
 
   submit(): void;
 }
+
+const SubmitModal = lazy(() => import('components/modals/Submit'));
 
 export default function useSubmit(): SubmitHandler {
   const [finalStatus, setFinalStatus] = useState<Verdict>(Verdict.None);

@@ -58,7 +58,7 @@ export default function ServerPage() {
         <Heading size='md'>Clusters</Heading>
         <Wrap spacing={4}>
           {data.judges.sort().map((judge, i) => (
-            <Section title={judge.name} icon={IconServer} key={i} display='flex' gap={2} w='100%'
+            <Section title={judge.name} icon={IconServer} key={judge.name} display='flex' gap={2} w='100%'
               rightItem={<Button size='xs' leftIcon={<IconInfoCircle size={12} />}>Runtimes</Button>}>
               <PropertyTree properties={{
                 'Version': judge.version,

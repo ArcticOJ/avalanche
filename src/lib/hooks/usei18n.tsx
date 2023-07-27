@@ -39,8 +39,9 @@ export function TranslationProvider({children, defaultLanguage}: TranslationProv
           (previous && previous[current]) || null,
         translations[value]
       );
-      const template = transStr || key;
-      return templite(template, obj);
+      if (!transStr)
+        return null;
+      return templite(transStr, obj);
     },
     currentLanguage: value,
     switchLanguage() {

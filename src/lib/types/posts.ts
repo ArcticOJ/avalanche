@@ -1,9 +1,8 @@
 import {Author} from 'lib/types/users';
 
-export interface Feed {
+export interface Post {
   id: string;
   title: string;
-  timestamp: string;
-  author: Author;
-  content: string;
+  postedAt: string;
+  authorID: string;
 }

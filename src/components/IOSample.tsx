@@ -1,16 +1,19 @@
-import {Box, Heading, IconButton, VStack} from '@chakra-ui/react';
+import {Box, Divider, Heading, IconButton, VStack, Text} from '@chakra-ui/react';
 import {IconCopy} from '@tabler/icons-react';
 import React from 'react';
+import KaTeX from 'components/KaTeX';
 
 export interface IOSampleProps {
-  label: string;
-  children: string;
+  num: number;
+  input: string;
+  output: string;
+  note?: string;
 }
 
-export default function IOSample({label, children}: IOSampleProps) {
+function Block({label, children}) {
   return (
-    <VStack align='stretch'>
-      <Heading ml={2} size='sm'>
+    <>
+      <Heading ml={2} size='sm' as='h5'>
         {label}
       </Heading>
       <Box bg='gray.800' p={4} borderRadius='2xl' position='relative' fontWeight={600} fontSize={14}>
@@ -24,6 +27,29 @@ export default function IOSample({label, children}: IOSampleProps) {
           ))}
         </code>
       </Box>
+    </>
+  );
+}
+
+export default function IOSample({num, input, output, note}: IOSampleProps) {
+  return (
+    <VStack align='stretch'>
+      <Heading as='h4' size='md' mb={2}>
+        Example test case {num}
+      </Heading>
+      <Block label='Input'>
+        {input}
+      </Block>
+      <Block label='Output'>
+        {output}
+      </Block>
+      <Heading size='sm' as='h5' ml={2}>
+        Note
+      </Heading>
+      <KaTeX size='xs' ml={4}>
+        {note}
+      </KaTeX>
+      <Divider mt={4} />
     </VStack>
   );
 }

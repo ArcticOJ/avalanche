@@ -12,12 +12,12 @@ export default class ErrorBoundary extends Component<any> {
 
   componentDidCatch(error, errorInfo) {
     // You can use your own error logging service here
-    console.log({error, errorInfo});
+    console.error({error, errorInfo});
   }
 
   render() {
     if (this.state.hasError) {
-      return this.state.error;
+      return <p>{this.state.error.message}</p>;
     }
     return this.props.children;
   }

@@ -5,6 +5,7 @@ module.exports = {
     '@typescript-eslint'
   ],
   'rules': {
+    '@typescript-eslint/no-unused-vars': 'warn',
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
     'object-curly-spacing': ['warn', 'never'],

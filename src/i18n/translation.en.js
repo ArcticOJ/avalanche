@@ -1,8 +1,10 @@
+import {brandName} from 'lib/branding';
+
 const translation = {
   'auth': {
     'login': 'Login',
     'register': 'Register',
-    'log2arctic': 'Login to Arctic',
+    'log2arctic': `Login to ${brandName}`,
     'reg4account': 'Register for an account',
     'rememberMe': 'Remember me',
     'forgotPwd': 'Forgot password?',

@@ -1,25 +1,39 @@
 import useFetch from 'lib/hooks/useFetch';
-import type {Feed} from 'lib/types/posts';
-import {Avatar, Box, Card, CardBody, CardHeader, Divider, Flex, Heading, HStack, Text, VStack} from '@chakra-ui/react';
+import type {Post} from 'lib/types/posts';
+import {
+  Avatar,
+  Box,
+  Card,
+  CardBody,
+  CardHeader,
+  Divider,
+  Flex,
+  Heading,
+  HStack,
+  Tab, Tabs,
+  Text,
+  VStack
+} from '@chakra-ui/react';
 import NextLink from 'next/link';
 import React, {lazy} from 'react';
 import {transition} from 'lib/utils/common';
+import {TabItem, TabItems} from 'components/TabItem';
 
 const Markdown = lazy(() => import('components/Markdown'));
 
 export default function Feeds() {
-  const {data} = useFetch<Feed[]>('/api/feeds', {
+  const {data} = useFetch<Post[]>('/api/posts', {
     fallbackData: []
   });
   return (
     <Flex overflowY='auto' p={4} h='100%' gap={4} justify='center'>
       <VStack>
-        {data.map(feed => (
+        {data.map(post => (
           <Card _hover={{
             bg: 'gray.700'
           }} _active={{
             bg: 'gray.600'
-          }} bg='gray.800' cursor='pointer' {...transition()} borderColor='gray.700' key={feed.id}
+          }} bg='gray.800' cursor='pointer' {...transition()} borderColor='gray.700' key={post.id}
           borderRadius='2xl'>
             <CardHeader>
               <HStack spacing={4}>
@@ -30,7 +44,7 @@ export default function Feeds() {
                     {/*feed.author.username*/}
                   </Heading>
                   <Text fontSize={13}>
-                    {new Date(feed.timestamp).toLocaleDateString()} &bull; 2 mins read
+                    {new Date(post.postedAt).toLocaleDateString()} &bull; 2 mins read
                   </Text>
                 </VStack>
               </HStack>

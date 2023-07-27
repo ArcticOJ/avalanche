@@ -1,24 +1,43 @@
 import 'allotment/dist/style.css';
+import 'katex/dist/katex.min.css';
 import {Allotment} from 'allotment';
 import useQuery from 'lib/hooks/useQuery';
 import React, {lazy, useEffect} from 'react';
-import {Code, Heading, TabPanel, TabPanels, Tabs, Text} from '@chakra-ui/react';
+import {
+  Code,
+  Divider,
+  Heading,
+  ListItem,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+  UnorderedList,
+  VStack
+} from '@chakra-ui/react';
 import {TabItem, TabItems} from 'components/TabItem';
 import {IconFileText, IconSend} from '@tabler/icons-react';
 import IOSample from 'components/IOSample';
 import Constraints from 'components/Constraints';
+import useFetch from 'lib/hooks/useFetch';
+import {useRouter} from 'next/router';
+import KaTeX from 'components/KaTeX';
+import {brandName} from 'lib/branding';
 
 const CodeEditor = lazy(() => import('components/CodeEditor'));
 
-const Markdown = lazy(() => import('components/Markdown'));
-
 export default function Problem() {
   const problem = useQuery('problem');
+  const {data, error} = useFetch(problem ? `/api/problems/${problem}` : null);
+  const {push} = useRouter();
   useEffect(() => {
-    if (problem && problem.length > 0)
-      fetch(`/api/problems/${problem}`).then(r => r.ok ? r.json() : {}).then(console.log);
-  }, [problem]);
-  return (
+    if (!data && error)
+      push('/404');
+    else if (data) {
+      document.title = `${brandName} | ${data.title}`;
+    }
+  }, [!data && error]);
+  return data && (
     <div style={{
       width: '100%',
       height: '100%'
@@ -26,7 +45,7 @@ export default function Problem() {
       <Allotment>
         <Allotment.Pane minSize={300}>
           <Tabs colorScheme='arctic' size='sm'>
-            <TabItems ml={2} mt={2}>
+            <TabItems ml={2} mt={2} justify='center'>
               <TabItem icon={IconFileText}>
                 Statement
               </TabItem>
@@ -36,18 +55,48 @@ export default function Problem() {
             </TabItems>
             <TabPanels>
               <TabPanel>
-                <Constraints mem='256 MB' io='Standard' time='1s' />
-                <Heading size='lg'>
-                  Hello World
+                <Constraints mem={`${data.constraints.memoryLimit} MB`} io='Standard' time='1s' />
+                <Heading size='xl' mb={8}>
+                  {data.title}
                 </Heading>
                 {/* TODO: make constraints collapsible */}
-                <Text my={4}>
-                  Print <Code>Hello, World.</Code>
-                </Text>
-                <IOSample label='Output'>
-                  Hello, World.
-                </IOSample>
-                <Markdown url='/static/welcome.md' />
+                <KaTeX my={4}>
+                  {data.statement}
+                </KaTeX>
+                <VStack spacing={4} align='stretch'>
+                  <Heading as='h3' size='md'>
+                    Input
+                  </Heading>
+                  <KaTeX ml={2}>
+                    {data.input}
+                  </KaTeX>
+                  <Heading as='h3' size='md'>
+                    Output
+                  </Heading>
+                  <KaTeX ml={2}>
+                    {data.output}
+                  </KaTeX>
+                  {Array.isArray(data.scoring) && (
+                    <>
+                      <Heading as='h3' size='md'>
+                        Scoring
+                      </Heading>
+                      <KaTeX ml={2}>
+                        <UnorderedList>
+                          {data.scoring.map((s, i) => (
+                            <ListItem key={i}>
+                              {s}
+                            </ListItem>
+                          ))}
+                        </UnorderedList>
+                      </KaTeX>
+                    </>
+                  )}
+                </VStack>
+                <Divider my={4} />
+                {(data.sampleTestCases || []).map((_case, i) => (
+                  <IOSample num={i + 1} input={_case.input} output={_case.output} note={_case.note} key={i} />
+                ))}
               </TabPanel>
             </TabPanels>
           </Tabs>

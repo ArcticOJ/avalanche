@@ -21,7 +21,7 @@ import {
   useDisclosure,
   VStack
 } from '@chakra-ui/react';
-import {createElement, startTransition, useState} from 'react';
+import {createElement, lazy, startTransition, useState} from 'react';
 import IconLeaderboard from 'components/icons/Leaderboard';
 import {
   Icon,
@@ -38,14 +38,17 @@ import {
   IconUser
 } from '@tabler/icons-react';
 import {usePathname} from 'next/navigation';
-import AuthModal from 'components/modals/Authenticate';
 import {useAuth} from 'lib/hooks/useAuth';
 import NextLink from 'next/link';
 import Gravatar from 'components/Gravatar';
 import {usei18n} from 'lib/hooks/usei18n';
 import {transition} from 'lib/utils/common';
-import Preferences from 'components/modals/Preferences';
 import {motion} from 'framer-motion';
+import {brandName} from 'lib/branding';
+
+const AuthModal = lazy(() => import('components/modals/Authenticate'));
+
+const PrefModal = lazy(() => import('components/modals/Preferences'));
 
 interface Route {
   route: string;
@@ -90,30 +93,6 @@ const
   },
   AnimatedDiv = chakra(motion.div);
 
-/*function InnerLayout({children}: PropsWithChildren) {
-  return route?.startsWith('/admin') ? (
-    <Flex h='100%' bg='gray.700' borderTopLeftRadius='2xl'>
-      <VStack h='100%' p={2}>
-        <NavigationItem id='adminTabIndicator' shade={-100} collapsed={false} isCurrent route={{
-          route: '/admin/config',
-          key: 'Configuration',
-          icon: Settings
-        }} />
-        <NavigationItem id='adminTabIndicator' shade={-100} collapsed={false} isCurrent={false} route={{
-          route: '/admin/contests',
-          key: 'contests',
-          icon: Book
-        }} />
-      </VStack>
-      {children}
-    </Flex>
-  ) : (
-    <>
-      {children}
-    </>
-  );
-}*/
-
 export function NavigationItem({
   route,
   isCurrent,
@@ -143,7 +122,6 @@ export function NavigationItem({
           bg={`${color}.200`}
           w='100%'
           h='100%'
-          key={route.route}
           layoutId={id}
         />
       )}
@@ -187,7 +165,7 @@ function UserInfo({collapsed, user, onLogOut, isLoggedIn}) {
   return (
     <>
       <AuthModal isOpen={openedModal === 'auth'} onClose={() => setOpenedModal('')} />
-      <Preferences isOpen={openedModal === 'pref'} onClose={() => setOpenedModal('')} />
+      <PrefModal isOpen={openedModal === 'pref'} onClose={() => setOpenedModal('')} />
       <Menu size='sm'>
         <MenuButton as={Button} variant='ghost' py={collapsed ? 6 : 8}
           {...transition(.2, ['background', 'width', 'height'])}
@@ -277,9 +255,9 @@ function Sidebar() {
     <Box as='aside' p={2} h='100vh' display='flex' flexDir='column' gap={2}
       {...transition(.2, ['width'])} w={isOpen ? 52 : 16}>
       <HStack alignSelf='center'>
-        <Image src='/static/favicon.png' alt='Arctic'
+        <Image src='/static/favicon.png' alt={brandName}
           boxSize={8} />
-        <Heading size='md' display={!isOpen ? 'none' : ''}>Arctic</Heading>
+        <Heading size='md' display={!isOpen ? 'none' : ''}>{brandName}</Heading>
         <Spacer display={!isOpen ? 'none' : ''} />
       </HStack>
       <Divider />

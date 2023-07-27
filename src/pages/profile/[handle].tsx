@@ -61,7 +61,7 @@ const Markdown = lazy(() => import('components/Markdown'));
 const RatingChart = lazy(() => import('components/RatingChart'));
 
 function TextItem({label, icon, children}) {
-  return (
+  return (children && children !== '') && (
     <HStack color='arctic.200'>
       <Tooltip hasArrow label={label} placement='left'>
         {createElement(icon, {
@@ -170,12 +170,12 @@ export default function ProfilePage() {
                 {dayjs(user.registeredAt).format('HH:mm:ss MMM D, YYYY')}
               </TextItem>
               {(user.connections || []).map((conn, i) => (
-                <ConnectionItem key={i} {...conn} />
+                <ConnectionItem key={conn.username + conn.provider} {...conn} />
               ))}
             </VStack>
             <Block as={Wrap} p={2}>
               {(user.roles || []).map((role, i) => (
-                <Box css={role.style} borderRadius='lg' key={i}
+                <Box css={role.style} borderRadius='xl' key={i}
                   px={2} py={1}>
                   {role.name}
                 </Box>
@@ -201,7 +201,7 @@ export default function ProfilePage() {
                     <Heading size='xs' as='h6' ml={2}>0 submissions in {year.label}</Heading>
                     <Spacer />
                     <ChakraSelect icon={IconCalendar} isLoading={isPending}
-                      onChange={val => startTransition(() => setYear(val as any))}
+                      onChange={val => val['value'] !== year.value && startTransition(() => setYear(val as any))}
                       value={year}
                       options={years} />
                   </Flex>
@@ -225,7 +225,9 @@ export default function ProfilePage() {
                         borderRadius: 'lg'
                       }
                     }}>
-                      {Repeat(<Skeleton />, 3)}
+                      <Skeleton />
+                      <Skeleton />
+                      <Skeleton />
                     </Flex>
                   </VStack>
                   <Grid gap={4} autoFlow='column'
@@ -245,7 +247,7 @@ export default function ProfilePage() {
                       label: 'Highest streak',
                       value: 0
                     }].map(({label, value}, i) => (
-                      <Stat bg='gray.800' px={4} py={2} borderRadius='xl' minW={200} key={i}>
+                      <Stat bg='gray.800' px={4} py={2} borderRadius='xl' minW={200} key={label}>
                         <StatLabel>{label}</StatLabel>
                         <StatNumber>{value}</StatNumber>
                       </Stat>

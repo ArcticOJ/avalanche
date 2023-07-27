@@ -84,6 +84,7 @@ export default function Container(props: HeatMapProps) {
   const width = gridNum * (space + rectSize) + paddingLeft + leftPad;
 
   const initStartDate = !startDate.getDay() ? startDate : new Date(startDate.getTime() - startDate.getDay() * oneDay);
+
   return (
     <svg ref={svgRef} width={`${width}px`} height={`${height}px`} {...other}>
       <Legend

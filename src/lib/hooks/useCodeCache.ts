@@ -33,6 +33,7 @@ export default function useCodeCache(): CacheHandler {
     });
     if (!state || state.length === 0) {
       const template = await fetch('/static/templates/cpp').then(r => r.ok ? r.text() : '');
+      if (template === '') return;
       const pos = template.indexOf('$END$');
       view.dispatch({
         changes: {
@@ -43,7 +44,7 @@ export default function useCodeCache(): CacheHandler {
         selection: EditorSelection.create([EditorSelection.cursor(pos)])
       });
     } else {
-      await sleep(150);
+      await sleep(200);
       view.setState(EditorState.fromJSON(JSON.parse(state), {}, fields));
     }
   }, []);

@@ -54,7 +54,7 @@ export default forwardRef<TextBoxProps, 'input'>(({
           })}
         </InputLeftElement>
       )}
-      <Input borderRadius='xl' focusBorderColor='arctic.300'
+      <Input fontSize='sm' borderRadius='xl' focusBorderColor='arctic.300'
         ref={ref}
         name={inputProps.name}
         placeholder={placeholder}

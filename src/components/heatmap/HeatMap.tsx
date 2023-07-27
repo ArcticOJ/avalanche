@@ -24,7 +24,7 @@ export default function HeatMap({startDate, endDate, ...props}: Omit<HeatMapProp
         <Tooltip key={props.key} hasArrow
           label={`${data.count} problems on ${data.date}`}
           placement='top'>
-          <rect rx={5} />
+          <rect rx={5} {...props} />
         </Tooltip>
       )} legendRender={props => (
         <rect {...props} rx={5} />
