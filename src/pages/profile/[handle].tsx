@@ -1,5 +1,6 @@
 import {
-  Box, BoxProps,
+  Box,
+  BoxProps,
   Button,
   Center,
   Flex,
@@ -20,7 +21,8 @@ import {
   Tabs,
   Text,
   Tooltip,
-  VStack, Wrap
+  VStack,
+  Wrap
 } from '@chakra-ui/react';
 import {
   IconAbacus,
@@ -30,7 +32,6 @@ import {
   IconBuilding,
   IconCalendar,
   IconChartHistogram,
-  IconClock,
   IconInfoCircle,
   IconUserEdit,
   IconUsersGroup
@@ -41,17 +42,12 @@ import Section from 'components/Section';
 import React, {createElement, lazy, Suspense, useEffect, useState, useTransition} from 'react';
 import {TabItem} from 'components/TabItem';
 import HeatMap from 'components/heatmap/HeatMap';
-import Discord from 'components/icons/Discord';
-import {Repeat} from 'immutable';
 import dayjs from 'dayjs';
 import ChakraSelect from 'components/ChakraSelect';
-import GitHub from 'components/icons/GitHub';
-import useClock from 'lib/hooks/useClock';
 import {resolveRatingColor} from 'lib/utils/rating';
 import {useAuth} from 'lib/hooks/useAuth';
 import useFetch from 'lib/hooks/useFetch';
 import useQuery from 'lib/hooks/useQuery';
-import _404 from '../_404';
 import LoadingOverlay from 'components/LoadingOverlay';
 import {resolveProvider} from 'lib/oauth/resolver';
 import {useRouter} from 'next/router';

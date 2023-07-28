@@ -9,7 +9,6 @@ import 'lib/loaders/dayjs';
 import Layout from 'components/Layout';
 import type {AppProps} from 'next/app';
 import LoadingOverlay from 'components/LoadingOverlay';
-import {CacheProvider} from '@chakra-ui/next-js';
 import NoSSR from 'react-no-ssr';
 import Head from 'next/head';
 import {brandName} from 'lib/branding';

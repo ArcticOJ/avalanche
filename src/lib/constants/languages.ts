@@ -9,11 +9,6 @@ export const languages: Record<string, {
   name: string,
   type: keyof typeof languageTypes,
 }> = {
-  'py3': {
-    name: 'Python 3',
-    type: 'python'
-  },
-  //'c++98': 'LLVM C++ 98',
   'gnu++11': {
     name: 'GNU C++ 11',
     type: 'cpp'
@@ -29,6 +24,14 @@ export const languages: Record<string, {
   'gnu++2a': {
     name: 'GNU C++ 20',
     type: 'cpp'
+  },
+  'py3': {
+    name: 'Python 3',
+    type: 'python'
+  },
+  'pypy3': {
+    name: 'PyPy 3',
+    type: 'python'
   },
   'pas': {
     name: 'Pascal',

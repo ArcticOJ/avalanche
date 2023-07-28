@@ -3,18 +3,7 @@ import 'katex/dist/katex.min.css';
 import {Allotment} from 'allotment';
 import useQuery from 'lib/hooks/useQuery';
 import React, {lazy, useEffect} from 'react';
-import {
-  Code,
-  Divider,
-  Heading,
-  ListItem,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Text,
-  UnorderedList,
-  VStack
-} from '@chakra-ui/react';
+import {Divider, Heading, ListItem, TabPanel, TabPanels, Tabs, UnorderedList, VStack} from '@chakra-ui/react';
 import {TabItem, TabItems} from 'components/TabItem';
 import {IconFileText, IconSend} from '@tabler/icons-react';
 import IOSample from 'components/IOSample';
@@ -23,11 +12,13 @@ import useFetch from 'lib/hooks/useFetch';
 import {useRouter} from 'next/router';
 import KaTeX from 'components/KaTeX';
 import {brandName} from 'lib/branding';
+import useSubmit from 'lib/hooks/useSubmit';
 
 const CodeEditor = lazy(() => import('components/CodeEditor'));
 
 export default function Problem() {
   const problem = useQuery('problem');
+  const {} = useSubmit();
   const {data, error} = useFetch(problem ? `/api/problems/${problem}` : null);
   const {push} = useRouter();
   useEffect(() => {
@@ -102,7 +93,7 @@ export default function Problem() {
           </Tabs>
         </Allotment.Pane>
         <Allotment.Pane minSize={500}>
-          <CodeEditor />
+          <CodeEditor onSubmit={(code, lang) => console.log(code, lang)} />
         </Allotment.Pane>
       </Allotment>
     </div>

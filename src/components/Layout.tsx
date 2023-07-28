@@ -19,6 +19,7 @@ import {
   Text,
   Tooltip,
   useDisclosure,
+  useMediaQuery,
   VStack
 } from '@chakra-ui/react';
 import {createElement, lazy, startTransition, useState} from 'react';
@@ -33,7 +34,6 @@ import {
   IconNews,
   IconSend,
   IconSettings,
-  IconShield,
   IconTrophy,
   IconUser
 } from '@tabler/icons-react';
@@ -86,11 +86,6 @@ const
       route: '/submissions'
     }
   ],
-  adminRoute: Route = {
-    route: '/admin',
-    key: 'adminPanel',
-    icon: IconShield
-  },
   AnimatedDiv = chakra(motion.div);
 
 export function NavigationItem({
@@ -251,6 +246,10 @@ function Sidebar() {
     defaultIsOpen: true
   });
   const currentRoute = getRootRoute(pathname);
+  const [isMobile, isSmallScreen] = useMediaQuery([
+    '(min-width: 1920px)',
+    '(display-mode: browser)'
+  ]);
   return (
     <Box as='aside' p={2} h='100vh' display='flex' flexDir='column' gap={2}
       {...transition(.2, ['width'])} w={isOpen ? 52 : 16}>
@@ -262,10 +261,7 @@ function Sidebar() {
       </HStack>
       <Divider />
       {renderRoutes(routes, currentRoute, !isOpen)}
-      <NavigationItem route={adminRoute} isCurrent={currentRoute?.startsWith('/admin')}
-        collapsed={!isOpen} color='red' />
       <Spacer />
-      {/*<Block />*/}
       <Tooltip hasArrow label='Expand' isDisabled={isOpen} placement='right'>
         {isOpen ? (
           <Button variant='ghost' w='100%' onClick={() => startTransition(onToggle)}
@@ -288,11 +284,9 @@ export default function Layout({children}) {
   return (
     <Flex w='100%' h='100vh' bg='gray.800'>
       <Sidebar />
-      {/*<InnerLayout>*/}
       <Box m={0} bg='gray.900' borderTopLeftRadius='2xl' flex={1} h='100%' as='main' overflow='auto'>
         {children}
       </Box>
-      {/*</InnerLayout>*/}
     </Flex>
   );
 }

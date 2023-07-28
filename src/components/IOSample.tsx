@@ -1,4 +1,4 @@
-import {Box, Divider, Heading, IconButton, VStack, Text} from '@chakra-ui/react';
+import {Box, Divider, Heading, IconButton, VStack} from '@chakra-ui/react';
 import {IconCopy} from '@tabler/icons-react';
 import React from 'react';
 import KaTeX from 'components/KaTeX';
@@ -16,7 +16,7 @@ function Block({label, children}) {
       <Heading ml={2} size='sm' as='h5'>
         {label}
       </Heading>
-      <Box bg='gray.800' p={4} borderRadius='2xl' position='relative' fontWeight={600} fontSize={14}>
+      <Box bg='gray.800' p={4} borderRadius='2xl' position='relative' fontWeight={600} fontSize='smaller'>
         <IconButton display='flex' aria-label='Copy to clipboard'
           position='absolute' right={4} top={4}>
           <IconCopy size={16} />

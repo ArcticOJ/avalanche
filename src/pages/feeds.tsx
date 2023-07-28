@@ -1,23 +1,8 @@
 import useFetch from 'lib/hooks/useFetch';
 import type {Post} from 'lib/types/posts';
-import {
-  Avatar,
-  Box,
-  Card,
-  CardBody,
-  CardHeader,
-  Divider,
-  Flex,
-  Heading,
-  HStack,
-  Tab, Tabs,
-  Text,
-  VStack
-} from '@chakra-ui/react';
-import NextLink from 'next/link';
+import {Avatar, Card, CardBody, CardHeader, Divider, Flex, Heading, HStack, Text, VStack} from '@chakra-ui/react';
 import React, {lazy} from 'react';
 import {transition} from 'lib/utils/common';
-import {TabItem, TabItems} from 'components/TabItem';
 
 const Markdown = lazy(() => import('components/Markdown'));
 
@@ -55,20 +40,6 @@ export default function Feeds() {
             </CardBody>
           </Card>
         ))}
-      </VStack>
-
-      <VStack pos='sticky'>
-        <Box textAlign='center' bg='gray.800' borderRadius='2xl' py={4} px={8}>
-          <Heading size='xs' as='h6'>
-            Before contest
-          </Heading>
-          <Heading size='md' as={NextLink} href='/' color='arctic.400'>
-            ICPC 2022 HCMC
-          </Heading>
-          <Heading size='sm'>
-            2 days
-          </Heading>
-        </Box>
       </VStack>
     </Flex>
   );

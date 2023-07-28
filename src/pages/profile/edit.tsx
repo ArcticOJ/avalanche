@@ -7,7 +7,6 @@ import {createOAuthRequest, request} from 'lib/utils/common';
 import copy from 'copy-to-clipboard';
 import React, {createElement} from 'react';
 import {resolveProvider} from 'lib/oauth/resolver';
-import useRequiredAuth from 'lib/hooks/useRequiredAuth';
 
 function OAuthConnection({provider, info, revalidate}) {
   const {name, icon} = resolveProvider(provider);

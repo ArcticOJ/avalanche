@@ -1,5 +1,5 @@
 // TODO: handle formula errors
-import {PropsWithChildren, useEffect, useRef} from 'react';
+import {useEffect, useRef} from 'react';
 import renderMathInElement from 'katex/dist/contrib/auto-render.min.js';
 import {Text, TextProps} from '@chakra-ui/react';
 

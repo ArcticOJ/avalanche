@@ -1,60 +1,114 @@
 import {tags as t} from '@lezer/highlight';
 import {createTheme} from '@uiw/codemirror-themes';
+import {inconsolata} from 'lib/themes/fonts';
 
 export default createTheme({
   theme: 'dark',
   settings: {
+    fontFamily: inconsolata,
     background: 'var(--chakra-colors-gray-900)',
-    foreground: '#9cdcfe',
-    caret: '#c6c6c6',
-    selection: '#6199ff2f',
-    selectionMatch: '#72a1ff59',
-    lineHighlight: '#ffffff0f',
+    foreground: '#FFFFFF',
+    caret: '#FFFFFF',
+    selection: 'var(--chakra-colors-arctic-700)',
+    selectionMatch: '#e5e9f0',
     gutterBackground: 'var(--chakra-colors-gray-900)',
-    gutterForeground: '#838383',
-    gutterActiveForeground: '#fff'
+    gutterForeground: '#4c566a',
+    gutterActiveForeground: '#d8dee9',
+    lineHighlight: 'var(--chakra-colors-gray-800)'
   },
   styles: [
+    {tag: t.keyword, color: '#5e81ac'},
     {
-      tag: [t.keyword, t.operatorKeyword, t.modifier, t.color, t.constant(t.name), t.standard(t.name), t.tagName, t.special(t.brace), t.atom, t.bool, t.special(t.variableName)],
-      color: '#569cd6'
+      tag: [t.name, t.deleted, t.character, t.propertyName, t.macroName],
+      color: '#88c0d0'
+    },
+    {tag: [t.variableName], color: '#8fbcbb'},
+    {tag: [t.function(t.variableName)], color: '#8fbcbb'},
+    {tag: [t.labelName], color: '#81a1c1'},
+    {
+      tag: [t.color, t.constant(t.name), t.standard(t.name)],
+      color: '#5e81ac'
+    },
+    {tag: [t.definition(t.name), t.separator], color: '#a3be8c'},
+    {tag: [t.brace], color: '#8fbcbb'},
+    {
+      tag: [t.annotation],
+      color: '#d30102'
     },
     {
-      tag: [t.controlKeyword, t.moduleKeyword],
-      color: '#c586c0'
+      tag: [t.number, t.changed, t.annotation, t.modifier, t.self, t.namespace],
+      color: '#b48ead'
     },
     {
-      tag: [t.name, t.deleted, t.character, t.macroName, t.propertyName, t.variableName, t.labelName, t.definition(t.name)],
-      color: '#9cdcfe'
-    },
-    {tag: t.heading, fontWeight: 'bold', color: '#9cdcfe'},
-    {
-      tag: [t.typeName, t.className, t.number, t.changed, t.annotation, t.self, t.namespace],
-      color: '#4ec9b0'
+      tag: [t.typeName, t.className],
+      color: '#ebcb8b'
     },
     {
-      tag: [t.function(t.variableName), t.function(t.propertyName)],
-      color: '#dcdcaa'
+      tag: [t.operator, t.operatorKeyword],
+      color: '#a3be8c'
     },
-    {tag: [t.number], color: '#b5cea8'},
     {
-      tag: [t.operator, t.punctuation, t.separator, t.url, t.escape, t.regexp],
-      color: '#d4d4d4'
+      tag: [t.tagName],
+      color: '#b48ead'
+    },
+    {
+      tag: [t.squareBracket],
+      color: '#bf616a'
+    },
+    {
+      tag: [t.angleBracket],
+      color: '#d08770'
+    },
+    {
+      tag: [t.attributeName],
+      color: '#ebcb8b'
     },
     {
       tag: [t.regexp],
-      color: '#d16969'
+      color: '#5e81ac'
     },
     {
-      tag: [t.special(t.string), t.processingInstruction, t.string, t.inserted],
-      color: '#ce9178'
+      tag: [t.quote],
+      color: '#b48ead'
     },
-    {tag: [t.angleBracket], color: '#808080'},
-    {tag: t.strong, fontWeight: 'bold'},
-    {tag: t.emphasis, fontStyle: 'italic'},
+    {tag: [t.string], color: '#a3be8c'},
+    {
+      tag: t.link,
+      color: '#a3be8c',
+      textDecoration: 'underline',
+      textUnderlinePosition: 'under'
+    },
+    {
+      tag: [t.url, t.escape, t.special(t.string)],
+      color: '#8fbcbb'
+    },
+    {tag: [t.meta], color: '#88c0d0'},
+    {tag: [t.monospace], color: '#d8dee9', fontStyle: 'italic'},
+    {tag: [t.comment], color: '#4c566a', fontStyle: 'italic'},
+    {tag: t.strong, fontWeight: 'bold', color: '#5e81ac'},
+    {tag: t.emphasis, fontStyle: 'italic', color: '#5e81ac'},
     {tag: t.strikethrough, textDecoration: 'line-through'},
-    {tag: [t.meta, t.comment], color: '#6a9955'},
-    {tag: t.link, color: '#6a9955', textDecoration: 'underline'},
-    {tag: t.invalid, color: '#ff0000'}
+    {tag: t.heading, fontWeight: 'bold', color: '#5e81ac'},
+    {tag: t.special(t.heading1), fontWeight: 'bold', color: '#5e81ac'},
+    {tag: t.heading1, fontWeight: 'bold', color: '#5e81ac'},
+    {
+      tag: [t.heading2, t.heading3, t.heading4],
+      fontWeight: 'bold',
+      color: '#5e81ac'
+    },
+    {
+      tag: [t.heading5, t.heading6],
+      color: '#5e81ac'
+    },
+    {tag: [t.atom, t.bool, t.special(t.variableName)], color: '#d08770'},
+    {
+      tag: [t.processingInstruction, t.inserted],
+      color: '#8fbcbb'
+    },
+    {
+      tag: [t.contentSeparator],
+      color: '#ebcb8b'
+    },
+    {tag: t.invalid, color: '#434c5e', borderBottom: '1px dotted #d30102'}
   ]
 });
