@@ -78,19 +78,18 @@ const componentRenderers: Components = {
       {children}
     </Heading>
   ),
-  code: ({children, inline, className}) => {
-    if (inline)
-      return (
-        <Code fontFamily='mono' fontSize='85%' borderRadius='md' bg='gray.800'>
-          {children}
-        </Code>
-      );
+  pre: ({children, className}) => {
     const content = children.toString().replace(/\n$/, '');
     const language = (/language-(\w+)/.exec(className || 'unknown') || []).at(1);
     return (
       <Prism code={content} language={language} withTitle />
     );
   },
+  code: ({children}) => (
+    <Code fontFamily='mono' fontSize='85%' borderRadius='md' bg='gray.800'>
+      {children}
+    </Code>
+  ),
   input: ({children, checked, disabled}) => (
     <CheckBox alignItems='center' isChecked={checked} isDisabled={disabled}>
       {children}

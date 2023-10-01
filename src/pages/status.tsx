@@ -14,7 +14,6 @@ import {
   VStack,
   Wrap
 } from '@chakra-ui/react';
-import type {Health} from 'lib/types/health';
 import {prettyBytes, round, transition} from 'lib/utils/common';
 import useRequest from 'lib/hooks/useRequest';
 import {IconInfoCircle, IconServer} from '@tabler/icons-react';

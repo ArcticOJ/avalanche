@@ -1,18 +1,17 @@
-import React, {SVGProps, useMemo} from 'react';
+import React, {SVGProps} from 'react';
 import {Box, Heading, Text, useToken} from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import {resolveRating} from 'lib/utils/rating';
 import {
-  Brush,
-  CartesianGrid, Dot, DotProps,
-  Legend, ReferenceArea,
+  CartesianGrid,
+  ReferenceArea,
   ResponsiveContainer,
   Scatter,
   ScatterChart,
-  Tooltip, TooltipProps,
+  Tooltip,
+  TooltipProps,
   XAxis,
-  YAxis,
-  ZAxis
+  YAxis
 } from 'recharts';
 import {ratingDistribution} from 'lib/constants/rating';
 import {montserrat} from 'lib/themes/fonts';
