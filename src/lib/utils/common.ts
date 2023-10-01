@@ -38,8 +38,8 @@ export function round(num: number, precision: number) {
   return Math.round((num + Number.EPSILON) * l) / l;
 }
 
-export function prettyBytes(bytes: number): string {
-  let i = 0;
+export function prettyBytes(bytes: number, start = 0): string {
+  let i = start;
   if (isNaN(bytes) || !isFinite(bytes) || !bytes) return '0 B';
   const isNegative = bytes < 0;
   if (isNegative)

@@ -27,6 +27,7 @@ import BaseModal from 'components/modals/BaseModal';
 import TabIcon from 'components/TabIcon';
 import useFetch from 'lib/hooks/useFetch';
 import {resolveProps} from 'lib/oauth/resolver';
+import {brandName} from 'lib/branding';
 
 function OAuthLoginButton({provider}) {
   const buttonProps = resolveProps(provider);
@@ -72,7 +73,7 @@ function LoginForm({onClose}) {
       {({handleSubmit, isSubmitting}) => (
         <form onSubmit={handleSubmit}>
           <VStack spacing={4} align='stretch'>
-            <TextField placeholder='Handle or email' icon={IconUser} name='handle' autoComplete='username' />
+            <TextField placeholder='Handle' icon={IconUser} name='handle' autoComplete='username' />
             <TextField placeholder='Password' icon={IconLock} type='password' name='password'
               autoComplete='current-password' />
             <HStack>
@@ -179,7 +180,9 @@ export default function AuthModal({isOpen, onClose}) {
   const [isLogin, {on, off}] = useBoolean(true);
   const {t} = usei18n();
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose} title={isLogin ? t('auth.log2arctic') : t('auth.reg4account')}>
+    <BaseModal isOpen={isOpen} onClose={onClose} title={isLogin ? t('auth.log2arctic', {
+      brand: brandName
+    }) : t('auth.reg4account')}>
       <Tabs variant='filled' index={isLogin ? 0 : 1} onChange={c => c === 1 ? off() : on()} isFitted>
         <TabList gap={2} mx={4}>
           <TabIcon icon={IconLogin}>

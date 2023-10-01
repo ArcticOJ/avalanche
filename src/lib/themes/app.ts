@@ -10,6 +10,7 @@ import numberInputTheme from 'lib/themes/components/numberInput';
 import switchTheme from 'lib/themes/components/switch';
 import progressTheme from 'lib/themes/components/progress';
 import {inconsolata, montserrat} from 'lib/themes/fonts';
+import popoverTheme from 'lib/themes/components/popover';
 
 
 // TODO: extend base theme instead of full theme
@@ -49,7 +50,8 @@ export default extendTheme({
     Progress: progressTheme,
     Switch: switchTheme,
     Tabs: tabsTheme,
-    Tooltip: tooltipTheme
+    Tooltip: tooltipTheme,
+    Popover: popoverTheme
   },
   config: {
     initialColorMode: 'dark',
@@ -66,7 +68,7 @@ export default extendTheme({
         display: 'none'
       },
       '::selection': {
-        bg: 'arctic.600'
+        bg: 'arctic.700'
       },
       'html, body': {
         bg: 'gray.900',

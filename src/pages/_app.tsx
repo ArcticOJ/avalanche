@@ -16,7 +16,7 @@ import ErrorBoundary from 'components/ErrorBoundary';
 
 function Title({component}) {
   const {t, currentLanguage} = usei18n();
-  const pageTitle = useMemo(() => component.displayName ? `${brandName} | ${t(`routes.${component.displayName}`)}` : brandName, [component, currentLanguage]);
+  const pageTitle = useMemo(() => component.displayName ? t(`routes.${component.displayName}`) : brandName, [component, currentLanguage]);
   return (
     <Head>
       <title>{pageTitle}</title>

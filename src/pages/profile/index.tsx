@@ -7,6 +7,6 @@ export default function Index() {
   const {push} = useRouter();
   useEffect(() => {
     if (isLoggedIn)
-      push(`/profile/${user.handle}`);
+      push(`/user/${user.handle}`);
   }, [isLoggedIn]);
 }

@@ -13,10 +13,10 @@ export default function Problems() {
     fallbackData: []
   });
   return (
-    <VStack borderRadius='2xl' p={2} bg='gray.800' align='stretch' mx='auto' alignSelf='center'>
+    <VStack borderRadius='2xl' p={2} my={6} mx={12} bg='gray.800'>
       <TextBox icon={IconSearch} placeholder='Find a problem' type='search' />
       <Divider />
-      <Table>
+      <Table size='sm'>
         <Thead>
           <Tr>
             <Th>Title</Th>

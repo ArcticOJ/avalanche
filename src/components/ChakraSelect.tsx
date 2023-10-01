@@ -1,9 +1,7 @@
-import {chakraComponents, Select} from 'chakra-react-select';
+import {chakraComponents, GroupBase, Props, Select, SelectInstance} from 'chakra-react-select';
 import React from 'react';
 import {IconChevronDown} from '@tabler/icons-react';
 import {forwardRef} from '@chakra-ui/react';
-import type {GroupBase, Props} from 'react-select';
-import type {SizeProp} from 'chakra-react-select/dist/types/types';
 
 const components = {
   Option: ({children, ...props}) => (
@@ -51,12 +49,12 @@ const styles = {
 
 
 export default forwardRef(<Option, IsMulti extends boolean, Group extends GroupBase<Option>>(
-  props: Props<Option, IsMulti, Group>, ref) => (
+  props: Props<Option, IsMulti, Group>, ref: React.Ref<SelectInstance<Option, IsMulti, Group>>) => (
     <>
       <Select
         {...props}
         ref={ref} selectedOptionColorScheme='arctic'
-        size={'xs' as SizeProp}
+        size={'xs' as any}
         chakraStyles={styles} focusBorderColor='arctic.300' useBasicStyles components={components} />
     </>
   ));

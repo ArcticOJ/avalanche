@@ -1,0 +1,29 @@
+auth:
+  login: Login
+  register: Register
+  log2arctic: 'Login to {{brand}}'
+  reg4account: Register for an account
+  rememberMe: Remember me
+  forgotPwd: Forgot password?
+  notLoggedIn: Not logged in
+  logout: Logout
+  orLoginWith: or login with
+language:
+  vi: Vietnamese
+  en: English
+routes:
+  feeds: Feeds
+  leaderboard: Leaderboard
+  contests: Contests
+  problems: Problems
+  submissions: Submissions
+  server: Server
+  profile: Profile
+  adminPanel: Admin panel
+acceptToc: 'By registering, you accept our '
+toc: Terms and conditions
+sidebar:
+  userMenu:
+    lang: 'Language: {{lang}}'
+    yourProfile: Your profile
+    userPrefs: User preferences

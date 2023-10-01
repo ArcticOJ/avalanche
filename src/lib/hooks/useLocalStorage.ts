@@ -3,9 +3,9 @@ import {useEffect, useState} from 'react';
 interface StorageHandler {
   value: string;
 
-  get(): string;
+  getPreferredLang(): string;
 
-  set(value: string): void;
+  setPreferredLang(value: string): void;
 }
 
 export default function useLocalStorage(key: string, defaultValue?: string, observe = true): StorageHandler {
@@ -22,11 +22,11 @@ export default function useLocalStorage(key: string, defaultValue?: string, obse
     }
   }, []);
   return {
-    get() {
+    getPreferredLang() {
       return localStorage.getItem(key) || defaultValue;
     },
     value: value || defaultValue || '',
-    set(value) {
+    setPreferredLang(value) {
       localStorage.setItem(key, value);
       setValue(localStorage.getItem(key) || defaultValue);
     }

@@ -1,15 +1,8 @@
-import {createContext, ReactNode, useContext} from 'react';
-import vi from 'i18n/translation.vi';
-import en from 'i18n/translation.en';
+import {createContext, ReactNode, useContext, useEffect, useState} from 'react';
 import useLocalStorage from 'lib/hooks/useLocalStorage';
 import templite from 'templite';
 
-const translations = {
-  vi,
-  en
-};
-
-type Language = keyof typeof translations;
+type Language = 'en' | 'vi';
 
 interface i18nHandler {
   currentLanguage: string;
@@ -31,13 +24,17 @@ export function usei18n(): i18nHandler {
 }
 
 export function TranslationProvider({children, defaultLanguage}: TranslationProviderProps) {
-  const {value, set} = useLocalStorage('arctic:language', defaultLanguage);
+  const {value, setPreferredLang} = useLocalStorage('arctic:language', defaultLanguage);
+  const [translation, setTranslation] = useState<any>({});
+  useEffect(() => {
+    import(`i18n/${value}.yml`).then(t => setTranslation(t));
+  }, [value]);
   const handler: i18nHandler = {
     t(key: string, obj: object): string {
       const transStr: any = key.split('.').reduce(
         (previous: any, current: string) =>
           (previous && previous[current]) || null,
-        translations[value]
+        translation
       );
       if (!transStr)
         return null;
@@ -45,7 +42,7 @@ export function TranslationProvider({children, defaultLanguage}: TranslationProv
     },
     currentLanguage: value,
     switchLanguage() {
-      set(value === 'vi' ? 'en' : 'vi');
+      setPreferredLang(value === 'vi' ? 'en' : 'vi');
     }
   };
 

@@ -11,13 +11,12 @@ export default class ErrorBoundary extends Component<any> {
   }
 
   componentDidCatch(error, errorInfo) {
-    // You can use your own error logging service here
     console.error({error, errorInfo});
   }
 
   render() {
     if (this.state.hasError) {
-      return <p>{this.state.error.message}</p>;
+      return <p>{JSON.stringify(this.state.error)}</p>;
     }
     return this.props.children;
   }

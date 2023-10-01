@@ -8,6 +8,12 @@ import {
   Heading,
   HStack,
   Icon,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
   Progress,
   Skeleton,
   SkeletonText,
@@ -39,18 +45,20 @@ import {
 import NextLink from 'next/link';
 import Gravatar from 'components/Gravatar';
 import Section from 'components/Section';
-import React, {createElement, lazy, Suspense, useEffect, useState, useTransition} from 'react';
+import React, {createElement, lazy, Suspense, useEffect, useMemo, useState, useTransition} from 'react';
 import {TabItem} from 'components/TabItem';
 import HeatMap from 'components/heatmap/HeatMap';
 import dayjs from 'dayjs';
 import ChakraSelect from 'components/ChakraSelect';
-import {resolveRatingColor} from 'lib/utils/rating';
+import {resolveRating} from 'lib/utils/rating';
 import {useAuth} from 'lib/hooks/useAuth';
 import useFetch from 'lib/hooks/useFetch';
 import useQuery from 'lib/hooks/useQuery';
 import LoadingOverlay from 'components/LoadingOverlay';
 import {resolveProvider} from 'lib/oauth/resolver';
 import {useRouter} from 'next/router';
+import {ratingDistribution} from 'lib/constants/rating';
+import {upperBound} from 'lib/utils/binary';
 
 const Markdown = lazy(() => import('components/Markdown'));
 
@@ -98,6 +106,11 @@ function Block({children, ...props}: BoxProps) {
   );
 }
 
+function findUpperRating(rating: number) {
+  console.log('test');
+  return upperBound(ratingDistribution, rating, (x, y) => x.begin - y);
+}
+
 export default function ProfilePage() {
   const {user: currentUser} = useAuth();
   const handle = useQuery('handle');
@@ -108,6 +121,10 @@ export default function ProfilePage() {
     value: year
   }));
   const [year, setYear] = useState(years[years.length - 1]);
+  const currentRating = useMemo(() => resolveRating(user ? user.rating : 0), [user?.rating]);
+  const nextRating = useMemo(() => findUpperRating(user ? user.rating : 0), [user?.rating]);
+  const percentToNextRating = useMemo(() => user && nextRating ? (user.rating - currentRating.begin) / (nextRating.begin - currentRating.begin) * 100 : -1, [user?.rating]);
+  const topRole = user?.roles ? user.roles[0] : null;
   const {push} = useRouter();
   useEffect(() => {
     if (!user && error)
@@ -131,32 +148,74 @@ export default function ProfilePage() {
           <VStack mt={8} spacing={4}>
             <Gravatar email={user.email} hash={user.avatar} size={160} borderWidth={2}
               borderColor='arctic.400' />
-            <VStack spacing={0}>
-              <Heading size='md' whiteSpace='nowrap'>
-                {user.displayName || user.handle}
-              </Heading>
-              <Text color='gray.500' fontSize='sm'>
-                {user.displayName ? user.handle : ''}
-              </Text>
-            </VStack>
+            <Popover placement='right' arrowSize={12}>
+              <PopoverTrigger>
+                <Button variant='ghost' h='max-content' fontWeight='normal'>
+                  <VStack m={2} color={currentRating.color}>
+                    <Flex align='center' gap={2}>
+                      <Heading size='md' whiteSpace='nowrap' style={{color: topRole?.color}}>
+                        {user.handle}
+                      </Heading>
+                      {topRole && (
+                        <Tooltip label={topRole.name} hasArrow placement='top'>
+                          {topRole.icon}
+                        </Tooltip>
+                      )}
+                    </Flex>
+                    <Text color='gray.500' fontSize='sm'>
+                      {user.displayName}
+                    </Text>
+                  </VStack>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverHeader>
+                  Roles
+                </PopoverHeader>
+                <PopoverBody as={Wrap} my={1}>
+                  {!user.roles && (
+                    <Text fontSize='xs'>This user does not have any roles!</Text>
+                  )}
+                  {(user.roles || []).map((role, i) => (
+                    <HStack fontSize='xs' borderWidth={1} style={{borderColor: role.color}} borderRadius='xl' key={i}
+                      px={2} py={1}>
+                      <Text>
+                        {role.icon}
+                      </Text>
+                      <Text>
+                        {role.name}
+                      </Text>
+                    </HStack>
+                  ))}
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
             {user.id === currentUser?.id && (
-              <Button mt={4} w='100%' leftIcon={<IconUserEdit size={16} />} as={NextLink} href='/profile/edit'>
+              <Button w='100%' leftIcon={<IconUserEdit size={16} />} as={NextLink} href='/profile/edit'>
                 Edit profile
               </Button>
             )}
             <Box />
             <Block>
-              2670 <Icon as={IconBadgesFilled} mb={-0.5} size={16} display='inline' color='arctic.300' /> - <Text
-                color={resolveRatingColor(2670)}
-                as='span'>Grandmaster</Text>
+              {user.rating} <Icon as={IconBadgesFilled} mb={-0.5} size={16} display='inline'
+                color='arctic.300' /> <Text
+                color={currentRating.color}
+                as='span'>{currentRating.title}</Text>
               <br />
-              2670 / 3000 - {(2670 / 3000 * 100).toFixed(0)}% to <Text color={resolveRatingColor(3000)}
-                as='span'>Champion</Text>
-              <Progress size='xs' my={2} value={(2670 / 3000 * 100)} sx={{
-                '&>div[role="progressbar"]': {
-                  bg: resolveRatingColor(3000)
-                }
-              }} />
+              {nextRating && (
+                <>
+                  {user.rating} / {nextRating.begin} - {percentToNextRating.toFixed(0)}%
+                  to <Text
+                    color={nextRating.color}
+                    as='span'>{nextRating.title}</Text>
+                  <Progress size='xs' my={2} value={percentToNextRating} sx={{
+                    '&>div[role="progressbar"]': {
+                      bg: nextRating.color
+                    }
+                  }} />
+                </>
+              )}
             </Block>
             <VStack alignSelf='start' align='start'>
               <TextItem label='Organization' icon={IconBuilding}>
@@ -169,14 +228,6 @@ export default function ProfilePage() {
                 <ConnectionItem key={conn.username + conn.provider} {...conn} />
               ))}
             </VStack>
-            <Block as={Wrap} p={2}>
-              {(user.roles || []).map((role, i) => (
-                <Box css={role.style} borderRadius='xl' key={i}
-                  px={2} py={1}>
-                  {role.name}
-                </Box>
-              ))}
-            </Block>
           </VStack>
           <TabPanels pt={4} textAlign='start' maxW={984}>
             <TabPanel display='flex' flexDir='column' gap={4}>
@@ -188,7 +239,7 @@ export default function ProfilePage() {
               <Section title='Prizes & awards' icon={IconAward} px={4} py={2}>
                 This user has not obtained any prizes or awards.
               </Section>
-              <Section title='Rating history' icon={IconChartHistogram} px={4} py={2}>
+              <Section h={320} title='Rating history' icon={IconChartHistogram} px={4} py={2}>
                 <RatingChart />
               </Section>
               <Section title='Activity' icon={IconActivity} px={4} pb={4}>
@@ -256,7 +307,8 @@ export default function ProfilePage() {
         </HStack>
       </Center>
     </Tabs>
-  ) : <LoadingOverlay />;
+  ) :
+    <LoadingOverlay />;
 }
 
 ProfilePage.displayName = 'profile';

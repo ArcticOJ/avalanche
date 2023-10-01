@@ -1,5 +1,5 @@
 import {Box, chakra, Flex, Heading, VStack} from '@chakra-ui/react';
-import {Children, createElement, PropsWithChildren, ReactElement, ReactNode, useState} from 'react';
+import {Children, createElement, PropsWithChildren, ReactElement, useState} from 'react';
 import {Icon} from '@tabler/icons-react';
 import {transition} from 'lib/utils/common';
 import {motion} from 'framer-motion';
@@ -13,7 +13,7 @@ export interface SegmentProps {
 
 export interface SegmentedControl {
   onItemSelected?: (index: number) => void;
-  items: ReactNode;
+  items: ReactElement[];
 }
 
 export function Segment({icon, label}: SegmentProps) {
@@ -33,8 +33,8 @@ export function SegmentedControl({items, children}: PropsWithChildren<SegmentedC
   const [selected, setSelected] = useState(0);
   return (
     <VStack align='stretch'>
-      <Flex p={2} w='100%' h={20} bg='gray.900' borderRadius='xl' gap={2}>
-        {Children.map(Children.only(items as ReactElement).props.children, (c, i) => (
+      <Flex p={2} h={20} bg='gray.900' borderRadius='xl' gap={2}>
+        {items.map((segment, i) => (
           <Box {...transition(.25, ['color'])} onClick={() => setSelected(i)}
             color={selected !== i && 'gray.300'} key={i}
             pos='relative' h='100%' w='100%'
@@ -44,7 +44,7 @@ export function SegmentedControl({items, children}: PropsWithChildren<SegmentedC
                 borderRadius='lg'
                 pos='absolute' />
             )}
-            {c}
+            {segment}
           </Box>
         ))}
       </Flex>

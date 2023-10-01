@@ -2,8 +2,21 @@ import 'allotment/dist/style.css';
 import 'katex/dist/katex.min.css';
 import {Allotment} from 'allotment';
 import useQuery from 'lib/hooks/useQuery';
-import React, {lazy, useEffect} from 'react';
-import {Divider, Heading, ListItem, TabPanel, TabPanels, Tabs, UnorderedList, VStack} from '@chakra-ui/react';
+import React, {useEffect, useRef} from 'react';
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  Heading,
+  ListItem,
+  Spacer,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  UnorderedList,
+  VStack
+} from '@chakra-ui/react';
 import {TabItem, TabItems} from 'components/TabItem';
 import {IconFileText, IconSend} from '@tabler/icons-react';
 import IOSample from 'components/IOSample';
@@ -11,21 +24,23 @@ import Constraints from 'components/Constraints';
 import useFetch from 'lib/hooks/useFetch';
 import {useRouter} from 'next/router';
 import KaTeX from 'components/KaTeX';
-import {brandName} from 'lib/branding';
 import useSubmit from 'lib/hooks/useSubmit';
-
-const CodeEditor = lazy(() => import('components/CodeEditor'));
+import {languages, options} from 'lib/constants/languages';
+import ChakraSelect from 'components/ChakraSelect';
+import {useCodeEditor} from 'lib/hooks/useCodeEditor';
 
 export default function Problem() {
   const problem = useQuery('problem');
-  const {} = useSubmit();
+  const {submit, submitModal} = useSubmit();
+  const ref = useRef<HTMLDivElement>();
+  const {view, setLanguage, language} = useCodeEditor([], ref.current, 'Write your code here!');
   const {data, error} = useFetch(problem ? `/api/problems/${problem}` : null);
   const {push} = useRouter();
   useEffect(() => {
     if (!data && error)
       push('/404');
     else if (data) {
-      document.title = `${brandName} | ${data.title}`;
+      document.title = data.title;
     }
   }, [!data && error]);
   return data && (
@@ -33,9 +48,10 @@ export default function Problem() {
       width: '100%',
       height: '100%'
     }}>
+      {submitModal}
       <Allotment>
         <Allotment.Pane minSize={300}>
-          <Tabs colorScheme='arctic' size='sm'>
+          <Tabs colorScheme='arctic' size='sm' isLazy>
             <TabItems ml={2} mt={2} justify='center'>
               <TabItem icon={IconFileText}>
                 Statement
@@ -93,7 +109,22 @@ export default function Problem() {
           </Tabs>
         </Allotment.Pane>
         <Allotment.Pane minSize={500}>
-          <CodeEditor onSubmit={(code, lang) => console.log(code, lang)} />
+          <Flex flexDir='column'>
+            <Flex p={2} bg='gray.800' align='center'>
+              <ChakraSelect value={{
+                label: languages?.[language]?.name,
+                value: language
+              }}
+              onChange={v => setLanguage((v as any).value)}
+              options={options} />
+              <Spacer />
+              <Button fontSize='smaller' rightIcon={<IconSend size={16} />} height='30px'
+                onClick={() => submit(view.state.doc.toString(), language)}>
+                Submit
+              </Button>
+            </Flex>
+            <Box ref={ref} flex={1} />
+          </Flex>
         </Allotment.Pane>
       </Allotment>
     </div>

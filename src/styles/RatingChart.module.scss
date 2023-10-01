@@ -1,0 +1,9 @@
+circle.dot {
+  transition-duration: .2s;
+  transition-timing-function: ease-in-out;
+  transition-property: stroke-width;
+
+  &:hover {
+    stroke-width: 4px;
+  }
+}

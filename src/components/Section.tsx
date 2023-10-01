@@ -8,9 +8,9 @@ interface SectionProps extends BoxProps {
   rightItem?: ReactElement;
 }
 
-export default function Section({title, icon, children, rightItem, ...props}: SectionProps) {
+export default function Section({title, icon, children, rightItem, bg, ...props}: SectionProps) {
   return (
-    <Box borderWidth={2} borderRadius='2xl' borderColor='gray.800'>
+    <Box borderWidth={2} borderRadius='2xl' bg={bg} borderColor='gray.800'>
       {(title || icon) && (
         <HStack px={4} py={2} spacing={2}>
           {icon && createElement(icon, {
@@ -21,7 +21,7 @@ export default function Section({title, icon, children, rightItem, ...props}: Se
           {rightItem}
         </HStack>
       )}
-      <Box {...props}>
+      <Box bg={bg} borderRadius='2xl' {...props}>
         {children}
       </Box>
     </Box>

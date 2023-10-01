@@ -2,36 +2,30 @@ export const ratingDistribution = [
   {
     title: 'Rookie',
     begin: 0,
-    end: 1200,
+    end: 1000,
     color: '#737373'
   },
   {
     title: 'Apprentice',
-    begin: 1200,
-    end: 1400,
+    begin: 1000,
+    end: 1300,
     color: '#2F855A'
   },
   {
-    title: 'Specialist',
-    begin: 1400,
-    end: 1600,
-    color: '#0BC5EA'
-  },
-  {
     title: 'Expert',
-    begin: 1600,
-    end: 1900,
+    begin: 1300,
+    end: 1600,
     color: '#2b6cb0'
   },
   {
     title: 'Candidate Master',
-    begin: 1900,
-    end: 2100,
+    begin: 1600,
+    end: 1900,
     color: '#6B46C1'
   },
   {
     title: 'Master',
-    begin: 2100,
+    begin: 1900,
     end: 2400,
     color: '#B7791F'
   },

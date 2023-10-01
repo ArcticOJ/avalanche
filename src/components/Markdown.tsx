@@ -22,6 +22,7 @@ import {
 import CheckBox from 'components/CheckBox';
 //import remarkCollapse from 'lib/extensions/remark/collapse';
 import Prism from 'components/Prism';
+import remarkGemoji from 'remark-gemoji';
 
 export interface MarkdownProps extends ChakraProps {
   url: string;
@@ -87,7 +88,7 @@ const componentRenderers: Components = {
     const content = children.toString().replace(/\n$/, '');
     const language = (/language-(\w+)/.exec(className || 'unknown') || []).at(1);
     return (
-      <Prism code={content} language={language} />
+      <Prism code={content} language={language} withTitle />
     );
   },
   input: ({children, checked, disabled}) => (
@@ -108,8 +109,8 @@ export default function Markdown({url, ...props}: MarkdownProps) {
   }, [url]);
   return (
     <ChakraMarkdown display='flex' flexDirection='column' gap={4}
-      remarkPlugins={[remarkGfm, remarkMath/*, remarkCollapse*/]}
-      rehypePlugins={[rehypeKatex]}
+      remarkPlugins={[remarkGfm, remarkMath, remarkGemoji/*, remarkCollapse*/]}
+      rehypePlugins={[rehypeKatex as any]}
       components={componentRenderers} p={4} {...props}>
       {content}
     </ChakraMarkdown>

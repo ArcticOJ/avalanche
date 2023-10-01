@@ -54,6 +54,7 @@ interface Route {
   route: string;
   key: string;
   icon: Icon;
+  subroutes?: Route[];
 }
 
 
@@ -195,12 +196,12 @@ function UserInfo({collapsed, user, onLogOut, isLoggedIn}) {
         <MenuList>
           {isLoggedIn ? (
             // avoid prefetching unneeded page
-            <MenuItem as={NextLink} href={isLoggedIn ? `/profile/${user.handle}` : null}
+            <MenuItem as={NextLink} href={isLoggedIn ? `/user/${user.handle}` : null}
               icon={<IconUser size={16} />}>{t('sidebar.userMenu.yourProfile')}</MenuItem>
           ) : (
             <>
               <MenuItem icon={<IconLogin size={16} />} as={Button}
-                onClick={() => setOpenedModal('auth')}>{t('auth.log2arctic')}</MenuItem>
+                onClick={() => setOpenedModal('auth')}>{t('auth.login')}</MenuItem>
               <MenuDivider />
             </>
           )}

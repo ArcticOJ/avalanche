@@ -14,6 +14,10 @@ html {
   scrollbar-width: thin;
 }
 
+nextjs-portal {
+  display: none;
+}
+
 ::-webkit-scrollbar {
   width: var(--chakra-sizes-1-5);
   height: var(--chakra-sizes-1-5);

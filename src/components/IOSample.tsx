@@ -18,7 +18,7 @@ function Block({label, children}) {
       </Heading>
       <Box bg='gray.800' p={4} borderRadius='2xl' position='relative' fontWeight={600} fontSize='smaller'>
         <IconButton display='flex' aria-label='Copy to clipboard'
-          position='absolute' right={4} top={4}>
+          position='absolute' right={3} top={3}>
           <IconCopy size={16} />
         </IconButton>
         <code>
@@ -43,13 +43,18 @@ export default function IOSample({num, input, output, note}: IOSampleProps) {
       <Block label='Output'>
         {output}
       </Block>
-      <Heading size='sm' as='h5' ml={2}>
-        Note
-      </Heading>
-      <KaTeX size='xs' ml={4}>
-        {note}
-      </KaTeX>
+      {note && note != '' && (
+        <>
+          <Heading size='sm' as='h5' ml={2}>
+            Note
+          </Heading>
+          <KaTeX size='xs' ml={4}>
+            {note}
+          </KaTeX>
+        </>
+      )}
       <Divider mt={4} />
     </VStack>
-  );
+  )
+  ;
 }

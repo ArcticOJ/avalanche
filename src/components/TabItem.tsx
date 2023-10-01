@@ -40,7 +40,7 @@ export const TabItem = forwardRef<TabIconProps, any>((props, ref) => {
       }} _active={{
         bg: 'gray.800'
       }} {...transition(.25)} fontSize='sm' h={hasIcon && 8} px={hasIcon ? 4 : 2}
-      fontWeight={isSelected && 600} {...tabProps}>
+      fontWeight='medium' {...tabProps}>
         <HStack>
           {hasIcon && createElement(icon, {
             size: 16
@@ -53,7 +53,7 @@ export const TabItem = forwardRef<TabIconProps, any>((props, ref) => {
       {isSelected && (
         <motion.div layoutId={`${id}_indicator`}
           style={{
-            width: '60%',
+            width: '75%',
             height: 3,
             borderRadius: 2,
             background: arctic

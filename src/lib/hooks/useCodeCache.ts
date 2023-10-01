@@ -21,13 +21,13 @@ const fields = {history: historyField, fold: foldState};
 export default function useCodeCache(): CacheHandler {
   // TODO: per-problem code cache, using indexeddb
 
-  const {set, get} = useLocalStorage('arctic:code', '', false);
+  const {setPreferredLang, getPreferredLang} = useLocalStorage('arctic:code', '', false);
   const save = useCallback((_, update: ViewUpdate) =>
-    set(compress(JSON.stringify(update.state.toJSON(fields)), {
+    setPreferredLang(compress(JSON.stringify(update.state.toJSON(fields)), {
       outputEncoding: 'Base64'
     })), []);
   const load = useCallback(() => {
-    const state = decompress(get(), {
+    const state = decompress(getPreferredLang(), {
       inputEncoding: 'Base64',
       outputEncoding: 'String'
     }) as string;

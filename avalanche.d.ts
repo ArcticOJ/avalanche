@@ -1,7 +1,4 @@
-import type {ChartTypeRegistry} from 'chart.js';
-
-declare module 'chart.js' {
-  interface ChartTypeRegistry {
-    rating: ChartTypeRegistry['scatter'];
-  }
+declare module '*.yml' {
+  const data: any;
+  export default data;
 }

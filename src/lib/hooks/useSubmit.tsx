@@ -15,7 +15,7 @@ interface SubmitHandler {
   submitModal: ReactElement;
   status: Verdict;
 
-  submit(): void;
+  submit(code: string, language: string): void;
 }
 
 const SubmitModal = lazy(() => import('components/modals/Submit'));
@@ -25,11 +25,14 @@ export default function useSubmit(): SubmitHandler {
   const problem = useQuery('problem');
   const {isOpen, onOpen, onClose} = useDisclosure();
   const [busy, {off, on}] = useBoolean();
-  const onSubmit = useThrottle(async (file: File) => {
+  const [code, setCode] = useState('');
+  const [lang, setLang] = useState('');
+  const onSubmit = useThrottle(async (content: string, language: string) => {
     on();
     const formData = new FormData();
-    formData.append('code', file);
-    const r = await fetch(`/api/contests/${problem}/submit`, {
+    formData.append('code', new Blob([content]));
+    formData.append('language', language);
+    const r = await fetch(`/api/problems/${problem}/submit`, {
       method: 'POST',
       body: formData
     });
@@ -40,25 +43,33 @@ export default function useSubmit(): SubmitHandler {
         if (done)
           break;
         for (const d of value.split('\n').map(f => f.trim()).filter(f => f !== '')) {
-          const data: JudgementStatus = JSON.parse(d);
-          notify('Response', JSON.stringify(data));
-          if (!data) break;
-          setFinalStatus(data.status);
-          if (data.status !== Verdict.Pending)
+          try {
+            const data: JudgementStatus = JSON.parse(d);
+            notify('Response', JSON.stringify(data));
+            if (!data) break;
+            setFinalStatus(data.status);
+            if (data.status !== Verdict.Pending)
+              break;
+          } catch {
             break;
+          }
         }
       }
-      off();
-    } else
-      off();
+    }
+    off();
+    onClose();
     setTimeout(() => setFinalStatus(Verdict.None), 2e3);
   }, 2e3);
   const modal = (
-    <SubmitModal isOpen={isOpen} onClose={onClose} callback={onSubmit} isBusy={busy} />
+    <SubmitModal isOpen={isOpen} onClose={() => onClose()} callback={onSubmit} code={code} lang={lang} isBusy={busy} />
   );
   return {
     submitModal: modal,
     status: finalStatus,
-    submit: onOpen
+    submit(code, lang) {
+      setCode(code);
+      setLang(lang);
+      onOpen();
+    }
   };
 }
